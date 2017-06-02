@@ -65,7 +65,7 @@ public class ShoesSupplierSender extends Agent {
         Object obj = null;
         try
         {    
-            ByteArrayInputStream arrayInputStream = new ByteArrayInputStream((byte[]) base64.decode(objectString));
+            ByteArrayInputStream arrayInputStream = new ByteArrayInputStream(base64.decode(objectString));
             GZIPInputStream gzipInputStream = new GZIPInputStream(arrayInputStream);
             ObjectInputStream objectInputStream = new ObjectInputStream(gzipInputStream);
             obj =  objectInputStream.readObject();

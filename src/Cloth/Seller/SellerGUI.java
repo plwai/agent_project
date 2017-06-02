@@ -9,7 +9,12 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.util.List;
 import javax.swing.JFrame;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 
 /**
  *
@@ -51,6 +56,11 @@ public class SellerGUI extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         serviceButton.setText("Check Service");
+        serviceButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                serviceButtonActionPerformed(evt);
+            }
+        });
 
         infoArea.setEditable(false);
         infoArea.setColumns(20);
@@ -116,8 +126,14 @@ public class SellerGUI extends javax.swing.JFrame {
         
         SellerStore storeObj = new SellerStore();
         storeObj.setServiceType(service);
+        System.out.println(storeObj.getServiceType());
         myAgent.requestSummary(storeObj);
     }//GEN-LAST:event_serviceSelectorActionPerformed
+
+    private void serviceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_serviceButtonActionPerformed
+        // TODO add your handling code here:
+        myAgent.getStoreServiceAgent();
+    }//GEN-LAST:event_serviceButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -164,8 +180,16 @@ public class SellerGUI extends javax.swing.JFrame {
     }
     
     public void showResult(SellerStore storeObj) {
+        Summary summary = storeObj.getSummary();
+        SummaryTable sumTable = new SummaryTable(new JFrame());
         
-        JOptionPane.showMessageDialog(new JFrame(), storeObj.getInfo());
+        for (ItemProperties item : summary.getItemSummary()) {
+            sumTable.addRow(item);
+        }
+        
+        sumTable.packTable();
+        sumTable.setLocationRelativeTo(null);
+        sumTable.setVisible(true);
     }
     
     public void popup(String text) {

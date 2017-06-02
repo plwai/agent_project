@@ -73,7 +73,7 @@ public class SellerSender extends Agent{
         Object obj = null;
         try
         {    
-            ByteArrayInputStream arrayInputStream = new ByteArrayInputStream((byte[]) base64.decode(objectString));
+            ByteArrayInputStream arrayInputStream = new ByteArrayInputStream(base64.decode(objectString));
             GZIPInputStream gzipInputStream = new GZIPInputStream(arrayInputStream);
             ObjectInputStream objectInputStream = new ObjectInputStream(gzipInputStream);
             obj =  objectInputStream.readObject();
@@ -99,6 +99,7 @@ public class SellerSender extends Agent{
                 ACLMessage msg= receive();
                 
 		if (msg != null) {
+                    sellerGui.clearLog();
                     sellerGui.appendLog("\n");
                     sellerGui.appendLog("Message received from " + msg.getSender());
                     
@@ -124,14 +125,12 @@ public class SellerSender extends Agent{
                         sellerGui.appendLog("StrToObj conversion error: " + ex.getMessage());
                     }
                 }
-                
-                sellerGui.appendLog("[CalcAgentPlus] CyclicBehaviour Block");
                 block();
             }
         });
     }
     
-    public void getCalcServiceAgent() {
+    public void getStoreServiceAgent() {
   	try {
             String service = null;
             String serviceType = "basic-seller";
@@ -217,7 +216,7 @@ public class SellerSender extends Agent{
         msg.addReceiver(AIDMap.get(storeObj.getServiceType()));
         send(msg);
         
-        sellerGui.appendLog("Sending Message to cap");
+        sellerGui.appendLog("Sending Message to " + AIDMap.get(storeObj.getServiceType()));
         sellerGui.appendLog("Message content [Base64 string]: " + strObj);   
     }
 }

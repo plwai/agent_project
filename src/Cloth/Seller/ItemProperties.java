@@ -5,6 +5,7 @@
  */
 package Cloth.Seller;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +13,7 @@ import java.util.List;
  *
  * @author Wai Pai Lee
  */
-public class ItemProperties {
+public class ItemProperties implements Serializable{
     private String itemName;
     private String itemType;
     private String itemSize;

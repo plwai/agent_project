@@ -5,11 +5,13 @@
  */
 package Cloth.Seller;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Wai Pai Lee
  */
-public class SellerStore {
+public class SellerStore implements Serializable {
     private Summary summary;
     private String serviceType, info;
     private boolean isSuccess;

@@ -63,7 +63,7 @@ public class SellerAgentSummary extends Agent
         Object obj = null;
         try
         {    
-            ByteArrayInputStream arrayInputStream = new ByteArrayInputStream((byte[]) base64.decode(objectString));
+            ByteArrayInputStream arrayInputStream = new ByteArrayInputStream(base64.decode(objectString));
             GZIPInputStream gzipInputStream = new GZIPInputStream(arrayInputStream);
             ObjectInputStream objectInputStream = new ObjectInputStream(gzipInputStream);
             obj =  objectInputStream.readObject();
@@ -86,7 +86,7 @@ public class SellerAgentSummary extends Agent
             ServiceDescription sd = new ServiceDescription();
             sd.setName(serviceName);
             sd.setType("basic-seller");
-            sd.addProperties(new Property("service", "check-summary"));
+            sd.addProperties(new Property("service", "check summary"));
             dfd.addServices(sd);
   		
             DFService.register(this, dfd);
@@ -118,7 +118,7 @@ public class SellerAgentSummary extends Agent
                         System.out.println("\n[SellerAgentSummary] StrToObj conversion error: " + ex.getMessage());
                     }
                     
-                    if (store.getServiceType().equals("all-summary")) {
+                    if (store.getServiceType().equals("check summary")) {
                         ItemProperties item = new ItemProperties();
                         Summary summary = new Summary();
                         
