@@ -23,6 +23,10 @@ public class Inventory implements Serializable{
     public int getNextId() {
         return itemSummary.size() + 1;
     }
+    
+    public boolean checkId(int id) {
+        return id <= itemSummary.size();
+    }
 
     public void addItem(ItemProperties item) {
         itemSummary.add(item);
