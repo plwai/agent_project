@@ -99,7 +99,7 @@ public class SellerAgentSummary extends Agent
 	{
             public void action() {
                 ACLMessage msg = receive();
-                Summary summary = new Summary();
+                SellerStore store = new SellerStore();
                 
 		if (msg != null) 
                 {   
@@ -111,15 +111,16 @@ public class SellerAgentSummary extends Agent
                     
                     try
                     {
-                        summary = (Summary)deserializeObjectFromString(msgContent);
+                        store = (SellerStore)deserializeObjectFromString(msgContent);
                     }
                     catch(Exception ex)
                     {
                         System.out.println("\n[SellerAgentSummary] StrToObj conversion error: " + ex.getMessage());
                     }
                     
-                    if (summary.getServiceType().equals("all-summary")) {
+                    if (store.getServiceType().equals("all-summary")) {
                         ItemProperties item = new ItemProperties();
+                        Summary summary = new Summary();
                         
                         item.setItemColor("test");
                         item.setItemName("test");
@@ -129,13 +130,14 @@ public class SellerAgentSummary extends Agent
                         item.setItemType("test");
                         
                         summary.addItem(item);
-                        summary.setIsSuccess(true);
-                        summary.setInfo("Service " + summary.getServiceType() + " is not available");
+                        store.setSummary(summary);
+                        store.setIsSuccess(true);
+                        store.setInfo("Successfully Summarize");
 
                         String strObj = ""; 
                         try
                         {
-                            strObj = serializeObjectToString(summary);
+                            strObj = serializeObjectToString(store);
                         }
                         catch (Exception ex)
                         {
@@ -153,13 +155,13 @@ public class SellerAgentSummary extends Agent
                         System.out.println("[SellerAgentSummary] Receiver Agent                 : " + msg.getSender());
                         System.out.println("[SellerAgentSummary] Message content [Base64 string]: " + msg.getContent());
                     } else {
-                        summary.setIsSuccess(false);
-                        summary.setInfo("Fail to summarize");
+                        store.setIsSuccess(false);
+                        store.setInfo("Service " + store.getServiceType() + " is not available");
 
                         String strObj = ""; 
                         try
                         {
-                            strObj = serializeObjectToString(summary);
+                            strObj = serializeObjectToString(store);
                         }
                         catch (Exception ex)
                         {

@@ -5,15 +5,29 @@
  */
 package Cloth.Seller;
 
+import java.awt.Dimension;
+import java.awt.Toolkit;
+import java.util.List;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Wai Pai Lee
  */
 public class SellerGUI extends javax.swing.JFrame {
-
+    private SellerSender myAgent;
+    
     /**
      * Creates new form SellerGUI
      */
+    
+    public SellerGUI(SellerSender a) {
+        super(a.getLocalName());		
+        myAgent = a;
+        initComponents();
+    }
+    
     public SellerGUI() {
         initComponents();
     }
@@ -45,7 +59,10 @@ public class SellerGUI extends javax.swing.JFrame {
 
         jLabel1.setText("Service: ");
 
+        serviceCombo.setEnabled(false);
+
         serviceSelector.setText("Select");
+        serviceSelector.setEnabled(false);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -121,6 +138,45 @@ public class SellerGUI extends javax.swing.JFrame {
                 new SellerGUI().setVisible(true);
             }
         });
+    }
+    
+    public void showGui() {
+	pack();
+	Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+	int centerX = (int)screenSize.getWidth() / 2;
+	int centerY = (int)screenSize.getHeight() / 2;
+	setLocation(centerX - getWidth() / 2, centerY - getHeight() / 2);
+	super.setVisible(true);
+    }
+    
+    public void showResult(SellerStore storeObj) {
+        
+        JOptionPane.showMessageDialog(new JFrame(), storeObj.getInfo());
+    }
+    
+    public void popup(String text) {
+        JOptionPane.showMessageDialog(new JFrame(), text);
+    }
+    
+    public void enabledGUI() {
+        serviceCombo.setEnabled(true);
+        serviceSelector.setEnabled(true);
+    }
+    
+    public void addService(List<String> operationList) {
+        serviceCombo.removeAllItems();
+        
+        for (String item : operationList) {
+            serviceCombo.addItem(item);
+        }
+    }
+    
+    public void appendLog(String text) {
+        infoArea.append(text + "\n");        
+    }
+    
+    public void clearLog() {
+        infoArea.setText("");
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
