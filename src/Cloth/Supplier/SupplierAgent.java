@@ -61,7 +61,7 @@ public class SupplierAgent extends Agent{
          Object obj = null;
         try
         {    
-            ByteArrayInputStream arrayInputStream = new ByteArrayInputStream((byte[]) base64.decode(objectString));
+            ByteArrayInputStream arrayInputStream = new ByteArrayInputStream(base64.decode(objectString));
             GZIPInputStream gzipInputStream = new GZIPInputStream(arrayInputStream);
             ObjectInputStream objectInputStream = new ObjectInputStream(gzipInputStream);
             obj =  objectInputStream.readObject();
@@ -83,7 +83,7 @@ public class SupplierAgent extends Agent{
             dfd.setName(getAID());
             ServiceDescription sd = new ServiceDescription();
             sd.setName(serviceName);
-            sd.setType("Add-cloth-quantity");
+            sd.setType("basic-Supplier");
             sd.addProperties(new Property("Clothing1", "cloth"));
             sd.addProperties(new Property("Clothing2", "panth"));
             sd.addProperties(new Property("Clothing3", "onepiece"));

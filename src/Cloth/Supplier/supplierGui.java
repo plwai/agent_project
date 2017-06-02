@@ -9,6 +9,7 @@ import jade.lang.acl.ACLMessage;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.util.ArrayList;
+import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 /**
@@ -20,6 +21,7 @@ public class supplierGui extends javax.swing.JFrame {
 
     /**
      * Creates new form supplierGui
+     * @param a
      */
     public supplierGui(supplierSender a) {
         super(a.getLocalName());		
@@ -31,7 +33,8 @@ public class supplierGui extends javax.swing.JFrame {
     {
         initComponents();
     }
-   
+    
+     
     
     public void showGui() {
 	pack();
@@ -50,9 +53,29 @@ public class supplierGui extends javax.swing.JFrame {
         txtLog.append(text + "\n");        
     }
     
+    public void popup(String text) {
+        JOptionPane.showMessageDialog(new JFrame(), text);
+    }
+    
     public void clearLog() {
         txtLog.setText("");
     }  
+    
+    public void showResult(Supplier calcObj) {
+        /*
+        if (calcObj.isSuccess()) {
+            System.out.println("\n[CalcSender] Calculation - operation: " + calcObj.getOperation());
+            System.out.println("[CalcSender] Calculation - operand1 : " + calcObj.getOperand1());
+            System.out.println("[CalcSender] Calculation - operand2 : " + calcObj.getOperand2());
+            System.out.println("[CalcSender] Calculation - result   : " + calcObj.getResult());
+            System.out.println("[CalcSender] Calculation - info   : " + calcObj.getInfo());
+        } else {
+            System.out.println("\n[CalcSender]" + calcObj.getInfo());
+        } 
+        */
+        
+        //JOptionPane.showMessageDialog(new JFrame(), calcObj.getInfo());
+    }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -317,7 +340,7 @@ public class supplierGui extends javax.swing.JFrame {
 
     private void checkServiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkServiceActionPerformed
         // TODO add your handling code here:
-        myAgent.getCalcServiceAgent();
+        myAgent.getSupplierServiceAgent();
     }//GEN-LAST:event_checkServiceActionPerformed
 
     /**
