@@ -59,12 +59,20 @@ public class SellerGUI extends javax.swing.JFrame {
         newColor = new javax.swing.JTextField();
         newQuantity = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
+        jDialog2 = new javax.swing.JDialog();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        productID = new javax.swing.JTextField();
+        restockButton = new javax.swing.JButton();
+        jLabel10 = new javax.swing.JLabel();
+        reQuantity = new javax.swing.JTextField();
         serviceButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         infoArea = new javax.swing.JTextArea();
         jLabel1 = new javax.swing.JLabel();
         serviceCombo = new javax.swing.JComboBox();
         serviceSelector = new javax.swing.JButton();
+        jLabel11 = new javax.swing.JLabel();
 
         jLabel3.setText("Name:");
 
@@ -146,6 +154,63 @@ public class SellerGUI extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
+        jLabel8.setText("Restock");
+
+        jLabel9.setText("Product ID:");
+
+        restockButton.setText("Restock");
+        restockButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                restockButtonMouseClicked(evt);
+            }
+        });
+
+        jLabel10.setText("Quantity:");
+
+        javax.swing.GroupLayout jDialog2Layout = new javax.swing.GroupLayout(jDialog2.getContentPane());
+        jDialog2.getContentPane().setLayout(jDialog2Layout);
+        jDialog2Layout.setHorizontalGroup(
+            jDialog2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jDialog2Layout.createSequentialGroup()
+                .addGroup(jDialog2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jDialog2Layout.createSequentialGroup()
+                        .addGroup(jDialog2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jDialog2Layout.createSequentialGroup()
+                                .addGap(120, 120, 120)
+                                .addComponent(jLabel8))
+                            .addGroup(jDialog2Layout.createSequentialGroup()
+                                .addGap(104, 104, 104)
+                                .addComponent(restockButton)))
+                        .addGap(0, 116, Short.MAX_VALUE))
+                    .addGroup(jDialog2Layout.createSequentialGroup()
+                        .addGap(22, 22, 22)
+                        .addGroup(jDialog2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel9)
+                            .addComponent(jLabel10))
+                        .addGap(18, 18, 18)
+                        .addGroup(jDialog2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(productID)
+                            .addComponent(reQuantity))))
+                .addContainerGap())
+        );
+        jDialog2Layout.setVerticalGroup(
+            jDialog2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jDialog2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel8)
+                .addGap(18, 18, 18)
+                .addGroup(jDialog2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel9)
+                    .addComponent(productID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jDialog2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel10)
+                    .addComponent(reQuantity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+                .addComponent(restockButton)
+                .addContainerGap())
+        );
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         serviceButton.setText("Check Service");
@@ -172,42 +237,47 @@ public class SellerGUI extends javax.swing.JFrame {
             }
         });
 
+        jLabel11.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        jLabel11.setText("Seller");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(serviceCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(serviceSelector, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 239, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(serviceButton)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(serviceButton, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(serviceCombo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(serviceSelector, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 416, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addGap(251, 251, 251)
+                .addComponent(jLabel11)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(serviceButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel11)
+                .addGap(15, 15, 15)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addComponent(serviceButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(serviceCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel1))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(serviceSelector))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 217, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(43, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -226,8 +296,11 @@ public class SellerGUI extends javax.swing.JFrame {
             storeObj.setServiceType(service);
             System.out.println(storeObj.getServiceType());
             myAgent.requestService(storeObj);
+        } else if(service.equals("restock")) {
+            jDialog2.setLocationRelativeTo(null);
+            jDialog2.pack();
+            jDialog2.setVisible(true);
         }
-        
     }//GEN-LAST:event_serviceSelectorActionPerformed
 
     private void serviceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_serviceButtonActionPerformed
@@ -252,7 +325,31 @@ public class SellerGUI extends javax.swing.JFrame {
         storeObj.setNewItem(newItem);
         System.out.println(storeObj.getServiceType());
         myAgent.requestService(storeObj);
+        
+        // reset
+        jDialog1.setVisible(false);
+        newName.setText("");
+        newType.setText("");
+        newSize.setText("");
+        newColor.setText("");
+        newQuantity.setText("");
     }//GEN-LAST:event_jButton1MouseClicked
+
+    private void restockButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_restockButtonMouseClicked
+        // TODO add your handling code here:
+         String service = (String)serviceCombo.getSelectedItem();
+        
+        SellerStore storeObj = new SellerStore();
+        storeObj.setServiceType(service);
+        storeObj.setQuantity(Integer.parseInt(reQuantity.getText()));
+        storeObj.setRestockId(Integer.parseInt(productID.getText()));
+        System.out.println(storeObj.getServiceType());
+        myAgent.requestService(storeObj);
+        
+        jDialog2.setVisible(false);
+        reQuantity.setText("");
+        productID.setText("");
+    }//GEN-LAST:event_restockButtonMouseClicked
 
     /**
      * @param args the command line arguments
@@ -298,10 +395,10 @@ public class SellerGUI extends javax.swing.JFrame {
 	super.setVisible(true);
     }
     
-    public void showResult(SellerStore storeObj) {
+    public void showTableResult(SellerStore storeObj) {
         Inventory summary = storeObj.getSummary();
         InventoryTable sumTable = new InventoryTable(new JFrame());
-        System.out.println(summary.getItemSummary().get(1).getId());
+
         for (ItemProperties item : summary.getItemSummary()) {
             sumTable.addRow(item);
         }
@@ -340,19 +437,27 @@ public class SellerGUI extends javax.swing.JFrame {
     private javax.swing.JTextArea infoArea;
     private javax.swing.JButton jButton1;
     private javax.swing.JDialog jDialog1;
+    private javax.swing.JDialog jDialog2;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField newColor;
     private javax.swing.JTextField newName;
     private javax.swing.JTextField newQuantity;
     private javax.swing.JTextField newSize;
     private javax.swing.JTextField newType;
+    private javax.swing.JTextField productID;
+    private javax.swing.JTextField reQuantity;
+    private javax.swing.JButton restockButton;
     private javax.swing.JButton serviceButton;
     private javax.swing.JComboBox serviceCombo;
     private javax.swing.JButton serviceSelector;

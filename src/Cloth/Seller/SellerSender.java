@@ -118,7 +118,9 @@ public class SellerSender extends Agent{
                             sellerGui.appendLog("Msg performative: " + ACLMessage.getPerformative(msg.getPerformative()));
                         }
                         
-                        sellerGui.showResult(store);                                                
+                        if(store.getServiceType().equals("check inventory")) {
+                            sellerGui.showTableResult(store);                 
+                        }
                     }
                     catch(Exception ex)
                     {

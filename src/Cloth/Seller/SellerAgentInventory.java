@@ -193,7 +193,7 @@ public class SellerAgentInventory extends Agent
                         List<ItemProperties> itemSummary = storeInventory.getItemSummary();
                         
                         if(productId <= itemSummary.size()) {
-                            itemSummary.get(productId).setItemQuantity(Integer.toString(quantity));
+                            itemSummary.get(productId - 1).setItemQuantity(Integer.toString(Integer.parseInt(itemSummary.get(productId - 1).getItemQuantity()) + quantity));
                             store.setIsSuccess(true);
                             store.setInfo("Successfully Restock");
                         }
