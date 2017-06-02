@@ -125,7 +125,7 @@ public class ShoesSupplierSender extends Agent {
     
     public void getCalcServiceAgent() {
   	try {
-            String serviceType = "basic-Supplier";
+            String serviceType = "Shoes basic-Supplier";
             shoeGui.appendLog("[supplierSender]Searching the DF/Yellow-Pages for " + serviceType + " service");
             shoeGui.appendLog("[supplierSender]Service properties:Add Tshirt");
             
@@ -134,7 +134,10 @@ public class ShoesSupplierSender extends Agent {
             
             ServiceDescription templateSd = new ServiceDescription();
             templateSd.setType(serviceType);
-            templateSd.addProperties(new Property("CLOTHS", "TSHIRT"));
+            templateSd.addProperties(new Property("Shoes1", "slipper"));
+            templateSd.addProperties(new Property("Shoes2", "ballerina"));
+            templateSd.addProperties(new Property("Shoes3", "boots"));
+            templateSd.addProperties(new Property("Shoes4", "heels"));
             template.addServices(templateSd);
   		
             SearchConstraints sc = new SearchConstraints();

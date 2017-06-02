@@ -83,7 +83,7 @@ public class SupplierAgent extends Agent{
             dfd.setName(getAID());
             ServiceDescription sd = new ServiceDescription();
             sd.setName(serviceName);
-            sd.setType("Add-cloth-quantity");
+            sd.setType("basic-Supplier");
             sd.addProperties(new Property("Clothing1", "cloth"));
             sd.addProperties(new Property("Clothing2", "panth"));
             sd.addProperties(new Property("Clothing3", "onepiece"));

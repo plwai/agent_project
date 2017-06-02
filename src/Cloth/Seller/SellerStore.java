@@ -13,7 +13,8 @@ import java.io.Serializable;
  */
 public class SellerStore implements Serializable {
     private Inventory summary;
-    private int restockId;
+    private ItemProperties newItem;
+    private int restockId, quantity;
     private String serviceType, info;
     private boolean isSuccess;
 
@@ -56,6 +57,20 @@ public class SellerStore implements Serializable {
     public void setRestockId(int restockId) {
         this.restockId = restockId;
     }
-    
-    
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public ItemProperties getNewItem() {
+        return newItem;
+    }
+
+    public void setNewItem(ItemProperties newItem) {
+        this.newItem = newItem;
+    }
 }

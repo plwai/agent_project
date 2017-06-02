@@ -27,6 +27,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
@@ -82,59 +83,6 @@ public class SellerAgentInventory extends Agent
         return obj;
     }
     
-    public void getSupplierServiceAgent() {
-  	try {
-            String service = null;
-            String serviceType = "supplier";
-            System.out.println("Searching the DF/Yellow-Pages for " + serviceType + " service");
-            System.out.println("Service properties: check-summary");
-            AIDMap.clear();
-            
-            // Build the description used as template for the search
-            DFAgentDescription template = new DFAgentDescription();
-            
-            ServiceDescription templateSd = new ServiceDescription();
-            templateSd.setType(serviceType);
-            template.addServices(templateSd);
-  		
-            SearchConstraints sc = new SearchConstraints();
-            // We want to receive 10 results at most
-            sc.setMaxResults(new Long(10));
-  		
-            DFAgentDescription[] results = DFService.search(this, template, sc);
-            if (results.length > 0) {
-  		System.out.println("Agent "+getLocalName()+" found the following " + serviceType + " services:");
-                
-  		for (int i = 0; i < results.length; ++i) {
-                    DFAgentDescription dfd = results[i];
-                    AID agentAID = dfd.getName();
-                    for(Iterator it = dfd.getAllServices(); it.hasNext();) {
-                        ServiceDescription serviceDesc = (ServiceDescription)it.next();
-                        
-                        for(Iterator it2 = serviceDesc.getAllProperties();it2.hasNext();) {
-                            Property p = (Property)(it2.next());
-                            service = p.getValue().toString();
-                        }
-                    }
-                    System.out.println("Agent name: " + agentAID);
-                    System.out.println("Service: " + service + " found"); 
-                    System.out.println("\n");  
-                    
-                    AIDMap.put(service, dfd.getName());
-  		}
-               
-            }	
-            else {
-                System.out.println("Agent "+getLocalName()+" did not find any " + serviceType + " service");
-                System.out.println("No " + serviceType + " agent service found!");
-            }
-  	}
-  	catch (FIPAException fe) {
-            fe.printStackTrace();
-  	}
-        System.out.println("\n");        
-    }
-    
     protected void setup() 
     {     
         String serviceName = "seller-agent";
@@ -151,23 +99,27 @@ public class SellerAgentInventory extends Agent
         
         storeInventory.addItem(item);
         
-        item.setId(2);
-        item.setItemColor("Red");
-        item.setItemName("The T-shirt");
-        item.setItemQuantity("5");
-        item.setItemSize("L");
-        item.setItemType("shirt");
+        ItemProperties item2 = new ItemProperties();
         
-        storeInventory.addItem(item);
+        item2.setId(2);
+        item2.setItemColor("Red");
+        item2.setItemName("The T-shirt");
+        item2.setItemQuantity("5");
+        item2.setItemSize("L");
+        item2.setItemType("shirt");
         
-        item.setId(3);
-        item.setItemColor("Black");
-        item.setItemName("The Pants");
-        item.setItemQuantity("10");
-        item.setItemSize("L");
-        item.setItemType("pant");
+        storeInventory.addItem(item2);
+        
+        ItemProperties item3 = new ItemProperties();
+        
+        item3.setId(3);
+        item3.setItemColor("Black");
+        item3.setItemName("The Pants");
+        item3.setItemQuantity("10");
+        item3.setItemSize("L");
+        item3.setItemType("pant");
 
-        storeInventory.addItem(item);
+        storeInventory.addItem(item3);
         
   	try {
             DFAgentDescription dfd = new DFAgentDescription();
@@ -176,7 +128,8 @@ public class SellerAgentInventory extends Agent
             sd.setName(serviceName);
             sd.setType("basic-seller");
             sd.addProperties(new Property("service", "check inventory"));
-            sd.addProperties(new Property("service", "update inventory"));
+            sd.addProperties(new Property("service", "restock"));
+            sd.addProperties(new Property("service", "add new product"));
             dfd.addServices(sd);
   		
             DFService.register(this, dfd);
@@ -234,24 +187,21 @@ public class SellerAgentInventory extends Agent
                         System.out.println("[SellerAgentInventory] Receiver Agent                 : " + msg.getSender());
                         System.out.println("[SellerAgentInventory] Message content [Base64 string]: " + msg.getContent());
                     }
-                    else if(store.getServiceType().equals("update inventory")) {
+                    else if(store.getServiceType().equals("restock")) {
                         int productId = store.getRestockId();
+                        int quantity = store.getQuantity();
+                        List<ItemProperties> itemSummary = storeInventory.getItemSummary();
                         
-                        if(storeInventory.checkId(productId)) {
+                        if(productId <= itemSummary.size()) {
+                            itemSummary.get(productId).setItemQuantity(Integer.toString(quantity));
                             store.setIsSuccess(true);
-                            store.setInfo("Restock");
-                            
-                            msg.setContent(msgContent);
-        
-                            msg.addReceiver(AIDMap.get(store.getServiceType()));
-                            send(msg);
+                            store.setInfo("Successfully Restock");
                         }
                         else {
-                            System.out.println("\n[SellerAgentInventory] Id does not exist");
                             store.setIsSuccess(false);
-                            store.setInfo("Id does not exist");
+                            store.setInfo("Fail to Restock");
                         }
-
+                        
                         String strObj = ""; 
                         try
                         {
@@ -262,7 +212,34 @@ public class SellerAgentInventory extends Agent
                             System.out.println("\n[SellerAgentInventory] ObjToStr conversion error: " + ex.getMessage());
                         }
                         
+                        ACLMessage reply = new ACLMessage(ACLMessage.INFORM);
+
+                        reply.addReceiver(msg.getSender()); //get from envelope                       
+
+                        reply.setContent(strObj);                        
+                        send(reply);
+
+                        System.out.println("\n[SellerAgentInventory] Sending Message!");
+                        System.out.println("[SellerAgentInventory] Receiver Agent                 : " + msg.getSender());
+                        System.out.println("[SellerAgentInventory] Message content [Base64 string]: " + msg.getContent());
+                    }
+                    else if(store.getServiceType().equals("add new product")) {
+                        ItemProperties newItem = store.getNewItem();
+                        newItem.setId(storeInventory.getItemSummary().size() + 1);
+
+                        storeInventory.addItem(newItem);
+                        store.setIsSuccess(true);
+                        store.setInfo("Successfully Added New Item");
                         
+                        String strObj = ""; 
+                        try
+                        {
+                            strObj = serializeObjectToString(store);
+                        }
+                        catch (Exception ex)
+                        {
+                            System.out.println("\n[SellerAgentInventory] ObjToStr conversion error: " + ex.getMessage());
+                        }
                         
                         ACLMessage reply = new ACLMessage(ACLMessage.INFORM);
 

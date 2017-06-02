@@ -83,7 +83,7 @@ public class ShoesSupplierAgent extends Agent{
             dfd.setName(getAID());
             ServiceDescription sd = new ServiceDescription();
             sd.setName(serviceName);
-            sd.setType("Add-Shoes-quantity");
+            sd.setType("Shoes basic-Supplier");
             sd.addProperties(new Property("Shoes1", "slipper"));
             sd.addProperties(new Property("Shoes2", "ballerina"));
             sd.addProperties(new Property("Shoes3", "boots"));

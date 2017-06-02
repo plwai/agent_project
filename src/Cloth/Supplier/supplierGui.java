@@ -9,6 +9,7 @@ import jade.lang.acl.ACLMessage;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.util.ArrayList;
+import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 /**
@@ -20,6 +21,7 @@ public class supplierGui extends javax.swing.JFrame {
 
     /**
      * Creates new form supplierGui
+     * @param a
      */
     public supplierGui(supplierSender a) {
         super(a.getLocalName());		
@@ -31,7 +33,8 @@ public class supplierGui extends javax.swing.JFrame {
     {
         initComponents();
     }
-   
+    
+     
     
     public void showGui() {
 	pack();
@@ -50,9 +53,29 @@ public class supplierGui extends javax.swing.JFrame {
         txtLog.append(text + "\n");        
     }
     
+    public void popup(String text) {
+        JOptionPane.showMessageDialog(new JFrame(), text);
+    }
+    
     public void clearLog() {
         txtLog.setText("");
     }  
+    
+    public void showResult(Supplier calcObj) {
+        /*
+        if (calcObj.isSuccess()) {
+            System.out.println("\n[CalcSender] Calculation - operation: " + calcObj.getOperation());
+            System.out.println("[CalcSender] Calculation - operand1 : " + calcObj.getOperand1());
+            System.out.println("[CalcSender] Calculation - operand2 : " + calcObj.getOperand2());
+            System.out.println("[CalcSender] Calculation - result   : " + calcObj.getResult());
+            System.out.println("[CalcSender] Calculation - info   : " + calcObj.getInfo());
+        } else {
+            System.out.println("\n[CalcSender]" + calcObj.getInfo());
+        } 
+        */
+        
+        //JOptionPane.showMessageDialog(new JFrame(), calcObj.getInfo());
+    }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -62,20 +85,20 @@ public class supplierGui extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        tsize = new javax.swing.JComboBox<String>();
-        tcolor = new javax.swing.JComboBox<String>();
+        tsize = new javax.swing.JComboBox<>();
+        tcolor = new javax.swing.JComboBox<>();
         jLabel5 = new javax.swing.JLabel();
         tqty = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
-        psize = new javax.swing.JComboBox<String>();
+        psize = new javax.swing.JComboBox<>();
         jLabel8 = new javax.swing.JLabel();
         pqty = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
-        ocolor = new javax.swing.JComboBox<String>();
+        ocolor = new javax.swing.JComboBox<>();
         jLabel11 = new javax.swing.JLabel();
-        osize = new javax.swing.JComboBox<String>();
+        osize = new javax.swing.JComboBox<>();
         jLabel12 = new javax.swing.JLabel();
         oqty = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
@@ -98,7 +121,7 @@ public class supplierGui extends javax.swing.JFrame {
         jLabel4.setText("Size");
 
         tsize.setMaximumRowCount(5);
-        tsize.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "S", "M", "L", "XL", "XXL" }));
+        tsize.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "S", "M", "L", "XL", "XXL" }));
         tsize.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 tsizeActionPerformed(evt);
@@ -106,7 +129,7 @@ public class supplierGui extends javax.swing.JFrame {
         });
 
         tcolor.setMaximumRowCount(3);
-        tcolor.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Blue", "Black", "Red" }));
+        tcolor.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Blue", "Black", "Red" }));
         tcolor.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 tcolorActionPerformed(evt);
@@ -121,7 +144,7 @@ public class supplierGui extends javax.swing.JFrame {
         jLabel7.setText("Size");
 
         psize.setMaximumRowCount(5);
-        psize.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "S", "M", "L", "XL", "XXL" }));
+        psize.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "S", "M", "L", "XL", "XXL" }));
 
         jLabel8.setText("Quantity");
 
@@ -131,12 +154,12 @@ public class supplierGui extends javax.swing.JFrame {
         jLabel10.setText("Color");
 
         ocolor.setMaximumRowCount(3);
-        ocolor.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Red", "Yellow", "White" }));
+        ocolor.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Red", "Yellow", "White" }));
 
         jLabel11.setText("Size");
 
         osize.setMaximumRowCount(5);
-        osize.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "S", "M", "L", "XL", "XXL" }));
+        osize.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "S", "M", "L", "XL", "XXL" }));
 
         jLabel12.setText("Quantity");
 
@@ -317,7 +340,7 @@ public class supplierGui extends javax.swing.JFrame {
 
     private void checkServiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkServiceActionPerformed
         // TODO add your handling code here:
-        myAgent.getCalcServiceAgent();
+        myAgent.getSupplierServiceAgent();
     }//GEN-LAST:event_checkServiceActionPerformed
 
     /**
@@ -345,6 +368,7 @@ public class supplierGui extends javax.swing.JFrame {
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(supplierGui.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */

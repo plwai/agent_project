@@ -135,7 +135,6 @@ public class SellerSender extends Agent{
             String service = null;
             String serviceType = "basic-seller";
             sellerGui.appendLog("Searching the DF/Yellow-Pages for " + serviceType + " service");
-            sellerGui.appendLog("Service properties: check-summary");
             AIDMap.clear();
             serviceList.clear();
             
@@ -163,16 +162,17 @@ public class SellerSender extends Agent{
                         for(Iterator it2 = serviceDesc.getAllProperties();it2.hasNext();) {
                             Property p = (Property)(it2.next());
                             service = p.getValue().toString();
+                            
+                            sellerGui.popup("Agent name: " + agentAID);
+                            sellerGui.appendLog("Agent name: " + agentAID);
+                            sellerGui.appendLog("Service: " + service + " found"); 
+                            sellerGui.appendLog("\n");  
+
+                            AIDMap.put(service, dfd.getName());
+
+                            serviceList.add(service);
                         }
                     }
-                    sellerGui.popup("Agent name: " + agentAID);
-                    sellerGui.appendLog("Agent name: " + agentAID);
-                    sellerGui.appendLog("Service: " + service + " found"); 
-                    sellerGui.appendLog("\n");  
-                    
-                    AIDMap.put(service, dfd.getName());
-                    
-                    serviceList.add(service);
   		}
                 
                 //enable sellerGui.combobox and submit button
@@ -191,9 +191,9 @@ public class SellerSender extends Agent{
         sellerGui.appendLog("\n");        
     }
     
-    public void requestSummary(SellerStore storeObj) {
+    public void requestService(SellerStore storeObj) {
         sellerGui.clearLog();
-        sellerGui.appendLog("Receiving summary request and Store object from CalcGUI");
+        sellerGui.appendLog("Receiving request and Store object from CalcGUI");
         sellerGui.appendLog("Store object - Service: " + storeObj.getServiceType());   
         sellerGui.appendLog("\n");
         

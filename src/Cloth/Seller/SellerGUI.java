@@ -46,12 +46,105 @@ public class SellerGUI extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jDialog1 = new javax.swing.JDialog();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        newName = new javax.swing.JTextField();
+        newType = new javax.swing.JTextField();
+        newSize = new javax.swing.JTextField();
+        newColor = new javax.swing.JTextField();
+        newQuantity = new javax.swing.JTextField();
+        jButton1 = new javax.swing.JButton();
         serviceButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         infoArea = new javax.swing.JTextArea();
         jLabel1 = new javax.swing.JLabel();
         serviceCombo = new javax.swing.JComboBox();
         serviceSelector = new javax.swing.JButton();
+
+        jLabel3.setText("Name:");
+
+        jLabel2.setText("Type:");
+
+        jLabel4.setText("Size:");
+
+        jLabel5.setText("Color:");
+
+        jLabel6.setText("Quantity:");
+
+        jLabel7.setText("Add New Product");
+
+        jButton1.setText("Add Product");
+        jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton1MouseClicked(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jDialog1Layout = new javax.swing.GroupLayout(jDialog1.getContentPane());
+        jDialog1.getContentPane().setLayout(jDialog1Layout);
+        jDialog1Layout.setHorizontalGroup(
+            jDialog1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jDialog1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jDialog1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jDialog1Layout.createSequentialGroup()
+                        .addGroup(jDialog1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel6)
+                            .addComponent(jLabel5)
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel2))
+                        .addGap(18, 18, 18)
+                        .addGroup(jDialog1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(newType, javax.swing.GroupLayout.DEFAULT_SIZE, 158, Short.MAX_VALUE)
+                            .addComponent(newSize)
+                            .addComponent(newColor)
+                            .addComponent(newQuantity)))
+                    .addGroup(jDialog1Layout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addGap(33, 33, 33)
+                        .addGroup(jDialog1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel7)
+                            .addComponent(newName, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jDialog1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton1)
+                .addGap(64, 64, 64))
+        );
+        jDialog1Layout.setVerticalGroup(
+            jDialog1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jDialog1Layout.createSequentialGroup()
+                .addGap(35, 35, 35)
+                .addComponent(jLabel7)
+                .addGap(18, 18, 18)
+                .addGroup(jDialog1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(newName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jDialog1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(newType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jDialog1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(newSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jDialog1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(newColor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jDialog1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(newQuantity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
+                .addComponent(jButton1)
+                .addContainerGap())
+        );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -124,16 +217,42 @@ public class SellerGUI extends javax.swing.JFrame {
         // TODO add your handling code here:
         String service = (String)serviceCombo.getSelectedItem();
         
-        SellerStore storeObj = new SellerStore();
-        storeObj.setServiceType(service);
-        System.out.println(storeObj.getServiceType());
-        myAgent.requestSummary(storeObj);
+        if(service.equals("add new product")) {
+            jDialog1.setLocationRelativeTo(null);
+            jDialog1.pack();
+            jDialog1.setVisible(true);
+        } else if(service.equals("check inventory")) {
+            SellerStore storeObj = new SellerStore();
+            storeObj.setServiceType(service);
+            System.out.println(storeObj.getServiceType());
+            myAgent.requestService(storeObj);
+        }
+        
     }//GEN-LAST:event_serviceSelectorActionPerformed
 
     private void serviceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_serviceButtonActionPerformed
         // TODO add your handling code here:
         myAgent.getStoreServiceAgent();
     }//GEN-LAST:event_serviceButtonActionPerformed
+
+    private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
+        // TODO add your handling code here:
+        String service = (String)serviceCombo.getSelectedItem();
+        
+        ItemProperties newItem = new ItemProperties();
+        
+        newItem.setItemName(newName.getText());
+        newItem.setItemType(newType.getText());
+        newItem.setItemColor(newColor.getText());
+        newItem.setItemSize(newSize.getText());
+        newItem.setItemQuantity(newQuantity.getText());
+        
+        SellerStore storeObj = new SellerStore();
+        storeObj.setServiceType(service);
+        storeObj.setNewItem(newItem);
+        System.out.println(storeObj.getServiceType());
+        myAgent.requestService(storeObj);
+    }//GEN-LAST:event_jButton1MouseClicked
 
     /**
      * @param args the command line arguments
@@ -182,7 +301,7 @@ public class SellerGUI extends javax.swing.JFrame {
     public void showResult(SellerStore storeObj) {
         Inventory summary = storeObj.getSummary();
         InventoryTable sumTable = new InventoryTable(new JFrame());
-        
+        System.out.println(summary.getItemSummary().get(1).getId());
         for (ItemProperties item : summary.getItemSummary()) {
             sumTable.addRow(item);
         }
@@ -219,8 +338,21 @@ public class SellerGUI extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea infoArea;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JDialog jDialog1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextField newColor;
+    private javax.swing.JTextField newName;
+    private javax.swing.JTextField newQuantity;
+    private javax.swing.JTextField newSize;
+    private javax.swing.JTextField newType;
     private javax.swing.JButton serviceButton;
     private javax.swing.JComboBox serviceCombo;
     private javax.swing.JButton serviceSelector;

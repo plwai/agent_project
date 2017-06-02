@@ -31,7 +31,7 @@ import org.apache.commons.codec.binary.Base64;
 public class supplierSender extends Agent {
     private supplierGui suppGui;
     static final Base64 base64 = new Base64();
-    private AID calcServiceAgentAID = null;
+    private AID supplierServiceAgentAID = null;
     
     public String serializeObjectToString(Object object) throws IOException
     {
@@ -123,7 +123,7 @@ public class supplierSender extends Agent {
         });
     }
     
-    public void getCalcServiceAgent() {
+    public void getSupplierServiceAgent() {
   	try {
             String serviceType = "basic-Supplier";
             suppGui.appendLog("[supplierSender]Searching the DF/Yellow-Pages for " + serviceType + " service");
@@ -134,7 +134,9 @@ public class supplierSender extends Agent {
             
             ServiceDescription templateSd = new ServiceDescription();
             templateSd.setType(serviceType);
-            templateSd.addProperties(new Property("CLOTHS", "TSHIRT"));
+            templateSd.addProperties(new Property("Clothing1", "cloth"));
+            templateSd.addProperties(new Property("Clothing2", "panth"));
+            templateSd.addProperties(new Property("Clothing3", "onepiece"));
             template.addServices(templateSd);
   		
             SearchConstraints sc = new SearchConstraints();
@@ -143,29 +145,31 @@ public class supplierSender extends Agent {
   		
             DFAgentDescription[] results = DFService.search(this, template, sc);
             if (results.length > 0) {
-  		suppGui.appendLog("[supplierSender]Agent "+getLocalName()+" found the following " + serviceType + " services:");
+  		suppGui.appendLog("Agent "+getLocalName()+" found the following " + serviceType + " services:");
   		for (int i = 0; i < results.length; ++i) {
                     DFAgentDescription dfd = results[i];
                     AID agentAID = dfd.getName();
-                    //calcGui.popup("Agent name: " + agentAID);
-                    suppGui.appendLog("[supplierSender]Agent name: " + agentAID);
+                    suppGui.popup("Agent name: " + agentAID);
+                    suppGui.appendLog("Agent name: " + agentAID);
                     suppGui.appendLog("\n"); 
   		}
                 
                 //just use the first one
                 DFAgentDescription dfd = results[0];
-                calcServiceAgentAID = dfd.getName();
+                supplierServiceAgentAID = dfd.getName();
                 
                 //enable calcGui.combobox and submit button
-                //calcGui.enabledGUI();
+                //suppGui.enabledGUI();
             }	
             else {
                 suppGui.appendLog("[supplierSender]Agent "+getLocalName()+" did not find any " + serviceType + " service");
-               // suppGui.popup("No " + serviceType + " agent service found!");
+                suppGui.popup("No " + serviceType + " agent service found!");
+                
             }
   	}
   	catch (FIPAException fe) {
             fe.printStackTrace();
+            
   	}
         suppGui.appendLog("\n");        
     }
@@ -196,7 +200,7 @@ public class supplierSender extends Agent {
 	msg.setContent(strObj);
         
      	//msg.addReceiver(new AID("cap", AID.ISLOCALNAME));
-        msg.addReceiver(calcServiceAgentAID);
+        msg.addReceiver(supplierServiceAgentAID);
         send(msg);
         
         suppGui.appendLog("[supplierSender]Sending Message to cap");
