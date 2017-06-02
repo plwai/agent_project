@@ -12,15 +12,16 @@ import java.io.Serializable;
  * @author Wai Pai Lee
  */
 public class SellerStore implements Serializable {
-    private Summary summary;
+    private Inventory summary;
+    private int restockId;
     private String serviceType, info;
     private boolean isSuccess;
 
-    public Summary getSummary() {
+    public Inventory getSummary() {
         return summary;
     }
 
-    public void setSummary(Summary summary) {
+    public void setSummary(Inventory summary) {
         this.summary = summary;
     }
 
@@ -46,6 +47,14 @@ public class SellerStore implements Serializable {
 
     public void setIsSuccess(boolean isSuccess) {
         this.isSuccess = isSuccess;
+    }
+
+    public int getRestockId() {
+        return restockId;
+    }
+
+    public void setRestockId(int restockId) {
+        this.restockId = restockId;
     }
     
     

@@ -16,27 +16,27 @@ import javax.swing.JTable;
  *
  * @author Wai Pai Lee
  */
-public class SummaryTable extends JDialog {
+public class InventoryTable extends JDialog {
     Vector col = new Vector(), row = new Vector();
     
-    public SummaryTable( JFrame frame ) {
+    public InventoryTable( JFrame frame ) {
         super( frame, "Item Summary", true );
         
+        col.add( "Id" );
         col.add( "Name" );
         col.add( "Type" );
         col.add( "Size" );
         col.add( "Color" );
         col.add( "Current Quantity" );
-        col.add( "Sells" );
         
         Vector newRow = new Vector();
         
+        newRow.add( "Id" );
         newRow.add( "Name" );
         newRow.add( "Type" );
         newRow.add( "Size" );
         newRow.add( "Color" );
         newRow.add( "Current Quantity" );
-        newRow.add( "Sells" );
         row.add(newRow);
     }
     
@@ -52,12 +52,13 @@ public class SummaryTable extends JDialog {
     public void addRow(ItemProperties itemProp){
         Vector newRow = new Vector();
         
+        newRow.add(itemProp.getId());
         newRow.add(itemProp.getItemName());
         newRow.add(itemProp.getItemType());
         newRow.add(itemProp.getItemSize());
         newRow.add(itemProp.getItemColor());
         newRow.add(itemProp.getItemQuantity());
-        newRow.add(itemProp.getItemSells());
+        //newRow.add(itemProp.getItemSells());
         
         row.add(newRow);
     }

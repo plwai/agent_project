@@ -20,6 +20,7 @@ public class ItemProperties implements Serializable{
     private String itemColor;
     private String itemQuantity;
     private String itemSells;
+    private int id;
 
     public ItemProperties() {
         itemName = "";
@@ -28,6 +29,14 @@ public class ItemProperties implements Serializable{
         itemColor = "";
         itemQuantity = "";
         itemSells = "";
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
     
     public String getItemName() {

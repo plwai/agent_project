@@ -180,8 +180,8 @@ public class SellerGUI extends javax.swing.JFrame {
     }
     
     public void showResult(SellerStore storeObj) {
-        Summary summary = storeObj.getSummary();
-        SummaryTable sumTable = new SummaryTable(new JFrame());
+        Inventory summary = storeObj.getSummary();
+        InventoryTable sumTable = new InventoryTable(new JFrame());
         
         for (ItemProperties item : summary.getItemSummary()) {
             sumTable.addRow(item);

@@ -13,11 +13,15 @@ import java.util.List;
  *
  * @author Wai Pai Lee
  */
-public class Summary implements Serializable{
+public class Inventory implements Serializable{
     private List<ItemProperties> itemSummary = new ArrayList<ItemProperties>();
 
     public List<ItemProperties> getItemSummary() {
         return itemSummary;
+    }
+    
+    public int getNextId() {
+        return itemSummary.size() + 1;
     }
 
     public void addItem(ItemProperties item) {
