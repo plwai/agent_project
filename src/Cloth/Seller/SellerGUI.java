@@ -63,6 +63,11 @@ public class SellerGUI extends javax.swing.JFrame {
 
         serviceSelector.setText("Select");
         serviceSelector.setEnabled(false);
+        serviceSelector.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                serviceSelectorActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -104,6 +109,15 @@ public class SellerGUI extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void serviceSelectorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_serviceSelectorActionPerformed
+        // TODO add your handling code here:
+        String service = (String)serviceCombo.getSelectedItem();
+        
+        SellerStore storeObj = new SellerStore();
+        storeObj.setServiceType(service);
+        myAgent.requestSummary(storeObj);
+    }//GEN-LAST:event_serviceSelectorActionPerformed
 
     /**
      * @param args the command line arguments
