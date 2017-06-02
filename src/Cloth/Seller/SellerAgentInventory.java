@@ -176,7 +176,7 @@ public class SellerAgentInventory extends Agent
             sd.setName(serviceName);
             sd.setType("basic-seller");
             sd.addProperties(new Property("service", "check inventory"));
-            sd.addProperties(new Property("service", "request restock"));
+            sd.addProperties(new Property("service", "update inventory"));
             dfd.addServices(sd);
   		
             DFService.register(this, dfd);
@@ -234,8 +234,7 @@ public class SellerAgentInventory extends Agent
                         System.out.println("[SellerAgentInventory] Receiver Agent                 : " + msg.getSender());
                         System.out.println("[SellerAgentInventory] Message content [Base64 string]: " + msg.getContent());
                     }
-                    else if(store.getServiceType().equals("request restock")) {
-                        getSupplierServiceAgent();
+                    else if(store.getServiceType().equals("update inventory")) {
                         int productId = store.getRestockId();
                         
                         if(storeInventory.checkId(productId)) {
