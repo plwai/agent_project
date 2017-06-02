@@ -60,21 +60,21 @@ public class shoesSupplierGUI extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        colorS = new javax.swing.JComboBox<>();
-        sizeS = new javax.swing.JComboBox<>();
+        colorS = new javax.swing.JComboBox<String>();
+        sizeS = new javax.swing.JComboBox<String>();
         jLabel5 = new javax.swing.JLabel();
         qtyS = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
-        colorB = new javax.swing.JComboBox<>();
+        colorB = new javax.swing.JComboBox<String>();
         jLabel8 = new javax.swing.JLabel();
-        sizeB = new javax.swing.JComboBox<>();
+        sizeB = new javax.swing.JComboBox<String>();
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
-        sizeL = new javax.swing.JComboBox<>();
+        sizeL = new javax.swing.JComboBox<String>();
         jLabel12 = new javax.swing.JLabel();
-        colorL = new javax.swing.JComboBox<>();
+        colorL = new javax.swing.JComboBox<String>();
         jLabel13 = new javax.swing.JLabel();
         qtyL = new javax.swing.JTextField();
         qtyB = new javax.swing.JTextField();
@@ -96,10 +96,10 @@ public class shoesSupplierGUI extends javax.swing.JFrame {
         jLabel4.setText("Color:");
 
         colorS.setMaximumRowCount(3);
-        colorS.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Blue", "Pink", "Purple" }));
+        colorS.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Blue", "Pink", "Purple" }));
 
         sizeS.setMaximumRowCount(3);
-        sizeS.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "6", "7", "8" }));
+        sizeS.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "6", "7", "8" }));
 
         jLabel5.setText("Quantity:");
 
@@ -109,7 +109,7 @@ public class shoesSupplierGUI extends javax.swing.JFrame {
         jLabel7.setText("Color:");
 
         colorB.setMaximumRowCount(3);
-        colorB.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Pink", "Black", "Purple" }));
+        colorB.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Pink", "Black", "Purple" }));
         colorB.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 colorBActionPerformed(evt);
@@ -119,7 +119,7 @@ public class shoesSupplierGUI extends javax.swing.JFrame {
         jLabel8.setText("Size:");
 
         sizeB.setMaximumRowCount(3);
-        sizeB.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "6", "7", "8" }));
+        sizeB.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "6", "7", "8" }));
 
         jLabel9.setText("Quantity:");
 
@@ -129,12 +129,12 @@ public class shoesSupplierGUI extends javax.swing.JFrame {
         jLabel11.setText("Color:");
 
         sizeL.setMaximumRowCount(3);
-        sizeL.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "8", "9", "10" }));
+        sizeL.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "8", "9", "10" }));
 
         jLabel12.setText("Size:");
 
         colorL.setMaximumRowCount(3);
-        colorL.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Black", "Brown", "Coffee" }));
+        colorL.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Black", "Brown", "Coffee" }));
         colorL.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 colorLActionPerformed(evt);
@@ -357,7 +357,6 @@ public class shoesSupplierGUI extends javax.swing.JFrame {
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(shoesSupplierGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */

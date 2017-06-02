@@ -62,20 +62,20 @@ public class supplierGui extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        tsize = new javax.swing.JComboBox<>();
-        tcolor = new javax.swing.JComboBox<>();
+        tsize = new javax.swing.JComboBox<String>();
+        tcolor = new javax.swing.JComboBox<String>();
         jLabel5 = new javax.swing.JLabel();
         tqty = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
-        psize = new javax.swing.JComboBox<>();
+        psize = new javax.swing.JComboBox<String>();
         jLabel8 = new javax.swing.JLabel();
         pqty = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
-        ocolor = new javax.swing.JComboBox<>();
+        ocolor = new javax.swing.JComboBox<String>();
         jLabel11 = new javax.swing.JLabel();
-        osize = new javax.swing.JComboBox<>();
+        osize = new javax.swing.JComboBox<String>();
         jLabel12 = new javax.swing.JLabel();
         oqty = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
@@ -98,7 +98,7 @@ public class supplierGui extends javax.swing.JFrame {
         jLabel4.setText("Size");
 
         tsize.setMaximumRowCount(5);
-        tsize.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "S", "M", "L", "XL", "XXL" }));
+        tsize.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "S", "M", "L", "XL", "XXL" }));
         tsize.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 tsizeActionPerformed(evt);
@@ -106,7 +106,7 @@ public class supplierGui extends javax.swing.JFrame {
         });
 
         tcolor.setMaximumRowCount(3);
-        tcolor.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Blue", "Black", "Red" }));
+        tcolor.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Blue", "Black", "Red" }));
         tcolor.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 tcolorActionPerformed(evt);
@@ -121,7 +121,7 @@ public class supplierGui extends javax.swing.JFrame {
         jLabel7.setText("Size");
 
         psize.setMaximumRowCount(5);
-        psize.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "S", "M", "L", "XL", "XXL" }));
+        psize.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "S", "M", "L", "XL", "XXL" }));
 
         jLabel8.setText("Quantity");
 
@@ -131,12 +131,12 @@ public class supplierGui extends javax.swing.JFrame {
         jLabel10.setText("Color");
 
         ocolor.setMaximumRowCount(3);
-        ocolor.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Red", "Yellow", "White" }));
+        ocolor.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Red", "Yellow", "White" }));
 
         jLabel11.setText("Size");
 
         osize.setMaximumRowCount(5);
-        osize.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "S", "M", "L", "XL", "XXL" }));
+        osize.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "S", "M", "L", "XL", "XXL" }));
 
         jLabel12.setText("Quantity");
 
@@ -345,7 +345,6 @@ public class supplierGui extends javax.swing.JFrame {
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(supplierGui.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
