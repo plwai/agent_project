@@ -8,6 +8,7 @@ package Cloth.Seller;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.util.List;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -15,6 +16,7 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -66,6 +68,12 @@ public class SellerGUI extends javax.swing.JFrame {
         restockButton = new javax.swing.JButton();
         jLabel10 = new javax.swing.JLabel();
         reQuantity = new javax.swing.JTextField();
+        jDialog3 = new javax.swing.JDialog();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
+        receiptBox = new javax.swing.JComboBox();
+        jLabel12 = new javax.swing.JLabel();
+        jLabel13 = new javax.swing.JLabel();
         serviceButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         infoArea = new javax.swing.JTextArea();
@@ -211,6 +219,61 @@ public class SellerGUI extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Product Id", "Quantity"
+            }
+        ));
+        jScrollPane2.setViewportView(jTable1);
+
+        receiptBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                receiptBoxActionPerformed(evt);
+            }
+        });
+        receiptBox.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                receiptBoxPropertyChange(evt);
+            }
+        });
+
+        jLabel12.setText("Customer Requests");
+
+        jLabel13.setText("Receipt ID");
+
+        javax.swing.GroupLayout jDialog3Layout = new javax.swing.GroupLayout(jDialog3.getContentPane());
+        jDialog3.getContentPane().setLayout(jDialog3Layout);
+        jDialog3Layout.setHorizontalGroup(
+            jDialog3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 549, Short.MAX_VALUE)
+            .addGroup(jDialog3Layout.createSequentialGroup()
+                .addGroup(jDialog3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jDialog3Layout.createSequentialGroup()
+                        .addGap(111, 111, 111)
+                        .addComponent(jLabel13)
+                        .addGap(18, 18, 18)
+                        .addComponent(receiptBox, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jDialog3Layout.createSequentialGroup()
+                        .addGap(216, 216, 216)
+                        .addComponent(jLabel12)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jDialog3Layout.setVerticalGroup(
+            jDialog3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jDialog3Layout.createSequentialGroup()
+                .addGap(0, 16, Short.MAX_VALUE)
+                .addComponent(jLabel12)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jDialog3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(receiptBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel13))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         serviceButton.setText("Check Service");
@@ -300,6 +363,11 @@ public class SellerGUI extends javax.swing.JFrame {
             jDialog2.setLocationRelativeTo(null);
             jDialog2.pack();
             jDialog2.setVisible(true);
+        } else if(service.equals("view request")) {
+            SellerStore storeObj = new SellerStore();
+            storeObj.setServiceType(service);
+            System.out.println(storeObj.getServiceType());
+            myAgent.requestService(storeObj);
         }
     }//GEN-LAST:event_serviceSelectorActionPerformed
 
@@ -351,6 +419,31 @@ public class SellerGUI extends javax.swing.JFrame {
         productID.setText("");
     }//GEN-LAST:event_restockButtonMouseClicked
 
+    private void receiptBoxPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_receiptBoxPropertyChange
+        // TODO add your handling code here:
+    }//GEN-LAST:event_receiptBoxPropertyChange
+
+    private void receiptBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_receiptBoxActionPerformed
+        // TODO add your handling code here:
+        JComboBox comboBox = (JComboBox) evt.getSource();
+
+        Object selected = comboBox.getSelectedItem();
+        List<Request> reqList = myAgent.getCusRequest(selected.toString());
+        
+        if(reqList != null) {
+            DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+            
+            model.setRowCount(0);
+            
+            for(Request item: reqList) {
+                Object[] row = {item.getProductID(), item.getQuantity()};
+                
+                
+                model.addRow(row);
+            }
+        }
+    }//GEN-LAST:event_receiptBoxActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -393,6 +486,18 @@ public class SellerGUI extends javax.swing.JFrame {
 	int centerY = (int)screenSize.getHeight() / 2;
 	setLocation(centerX - getWidth() / 2, centerY - getHeight() / 2);
 	super.setVisible(true);
+    }
+    
+    public void showRequest(SellerStore storeObj) {
+        List<CustomerRequests> cusReq = storeObj.getRequestList();
+        
+        for(CustomerRequests item: cusReq) {
+            receiptBox.addItem(item.getReceiptId());
+        }
+        
+        jDialog3.setLocationRelativeTo(null);
+        jDialog3.pack();
+        jDialog3.setVisible(true);
     }
     
     public void showTableResult(SellerStore storeObj) {
@@ -438,9 +543,12 @@ public class SellerGUI extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JDialog jDialog1;
     private javax.swing.JDialog jDialog2;
+    private javax.swing.JDialog jDialog3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -450,6 +558,8 @@ public class SellerGUI extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTable jTable1;
     private javax.swing.JTextField newColor;
     private javax.swing.JTextField newName;
     private javax.swing.JTextField newQuantity;
@@ -457,6 +567,7 @@ public class SellerGUI extends javax.swing.JFrame {
     private javax.swing.JTextField newType;
     private javax.swing.JTextField productID;
     private javax.swing.JTextField reQuantity;
+    private javax.swing.JComboBox receiptBox;
     private javax.swing.JButton restockButton;
     private javax.swing.JButton serviceButton;
     private javax.swing.JComboBox serviceCombo;

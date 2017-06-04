@@ -6,6 +6,15 @@
 package Cloth.Seller;
 
 import java.io.Serializable;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -16,7 +25,16 @@ public class SellerStore implements Serializable {
     private ItemProperties newItem;
     private int restockId, quantity;
     private String serviceType, info;
+    private List<CustomerRequests> cusRequestList = new ArrayList<CustomerRequests>();
     private boolean isSuccess;
+
+    public SellerStore() {
+        try {  
+            Class.forName("org.apache.derby.jdbc.ClientDriver");
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Inventory.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
     public Inventory getSummary() {
         return summary;
@@ -72,5 +90,29 @@ public class SellerStore implements Serializable {
 
     public void setNewItem(ItemProperties newItem) {
         this.newItem = newItem;
+    }
+
+    public List<CustomerRequests> getRequestList() {
+        return cusRequestList;
+    }
+
+    public void setRequestList(List<CustomerRequests> cusRequestList) {
+        this.cusRequestList = cusRequestList;
+    }
+    
+    public void loadCusReq() {
+        try {  
+            Connection con=DriverManager.getConnection(  "jdbc:derby://localhost:1527/sample","app","app");
+            Statement stmt=con.createStatement(); 
+            ResultSet rs=stmt.executeQuery("select * from RECEIPT");  
+
+            while(rs.next()){  
+                cusRequestList.add(new CustomerRequests(rs.getInt(1)));
+            }  
+                
+            con.close();  
+        } catch (SQLException ex) {
+            Logger.getLogger(Inventory.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

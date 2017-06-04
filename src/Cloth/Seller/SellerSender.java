@@ -37,8 +37,9 @@ import org.apache.commons.codec.binary.Base64;
 public class SellerSender extends Agent{
     private SellerGUI sellerGui;
     static final Base64 base64 = new Base64();
-    private Map<String, AID> AIDMap = new HashMap<String, AID>();;
-    private List<String> serviceList = new ArrayList<String>();;
+    private Map<String, AID> AIDMap = new HashMap<String, AID>();
+    private List<String> serviceList = new ArrayList<String>();
+    private List<CustomerRequests> cusReq = new ArrayList<CustomerRequests>();
     
     //object to string
     public String serializeObjectToString(Object object) throws IOException 
@@ -121,6 +122,10 @@ public class SellerSender extends Agent{
                         if(store.getServiceType().equals("check inventory")) {
                             sellerGui.showTableResult(store);                 
                         }
+                        else if (store.getServiceType().equals("view request")) {
+                            sellerGui.showRequest(store);
+                            cusReq = store.getRequestList();
+                        }
                     }
                     catch(Exception ex)
                     {
@@ -191,6 +196,15 @@ public class SellerSender extends Agent{
             fe.printStackTrace();
   	}
         sellerGui.appendLog("\n");        
+    }
+    
+    public List<Request> getCusRequest(String receiptId) {
+        for(CustomerRequests item: cusReq) {
+            if(item.getReceiptId() == Integer.parseInt(receiptId)) {
+                return item.getRequestList();
+            }
+        }
+        return null;
     }
     
     public void requestService(SellerStore storeObj) {

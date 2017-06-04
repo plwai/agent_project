@@ -95,6 +95,7 @@ public class SellerAgentInventory extends Agent
             sd.addProperties(new Property("service", "check inventory"));
             sd.addProperties(new Property("service", "restock"));
             sd.addProperties(new Property("service", "add new product"));
+            sd.addProperties(new Property("service", "view request"));
             dfd.addServices(sd);
   		
             DFService.register(this, dfd);
@@ -199,6 +200,33 @@ public class SellerAgentInventory extends Agent
                         storeInventory.addItem(newItem);
                         store.setIsSuccess(true);
                         store.setInfo("Successfully Added New Item");
+                        
+                        String strObj = ""; 
+                        try
+                        {
+                            strObj = serializeObjectToString(store);
+                        }
+                        catch (Exception ex)
+                        {
+                            System.out.println("\n[SellerAgentInventory] ObjToStr conversion error: " + ex.getMessage());
+                        }
+                        
+                        ACLMessage reply = new ACLMessage(ACLMessage.INFORM);
+
+                        reply.addReceiver(msg.getSender()); //get from envelope                       
+
+                        reply.setContent(strObj);                        
+                        send(reply);
+
+                        System.out.println("\n[SellerAgentInventory] Sending Message!");
+                        System.out.println("[SellerAgentInventory] Receiver Agent                 : " + msg.getSender());
+                        System.out.println("[SellerAgentInventory] Message content [Base64 string]: " + msg.getContent());
+                    } 
+                    else if(store.getServiceType().equals("view request")) {
+                        store.loadCusReq();
+                        
+                        store.setIsSuccess(true);
+                        store.setInfo("Successfully Load Customer Order Request");
                         
                         String strObj = ""; 
                         try
