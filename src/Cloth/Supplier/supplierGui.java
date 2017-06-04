@@ -12,10 +12,7 @@ import java.util.ArrayList;
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-/**
- *
- * @author Tiki
- */
+
 public class supplierGui extends javax.swing.JFrame {
     private supplierSender myAgent;
 
@@ -191,7 +188,8 @@ public class supplierGui extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(419, 419, 419)
-                        .addComponent(checkService))
+                        .addComponent(checkService)
+                        .addGap(0, 215, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -242,8 +240,8 @@ public class supplierGui extends javax.swing.JFrame {
                                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                             .addComponent(tqty, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))))))
                         .addGap(18, 18, 18)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 277, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(jScrollPane1)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -313,18 +311,22 @@ public class supplierGui extends javax.swing.JFrame {
         String sizeO = (String)osize.getSelectedItem();
         int qtyO = Integer.parseInt(oqty.getText());
         
+        //String info = "Done Add products";
+        
         
         Supplier supp = new Supplier();
         supp.setClothColor(colorT);
         supp.setClothSize(sizeT);
         supp.setClothQuantity(qtyT);
         
-        supp.setPantSize(sizeT);
-        supp.setPantQuantity(qtyT);
+        supp.setPantSize(sizeP);
+        supp.setPantQuantity(qtyP);
         
-        supp.setOnepieceColor(colorT);
-        supp.setOnepieceSize(sizeT);
-        supp.setOnepieceQuantity(qtyT);
+        supp.setOnepieceColor(colorO);
+        supp.setOnepieceSize(sizeO);
+        supp.setOnepieceQuantity(qtyO);
+        
+        //supp.setInfo(info);
         
         myAgent.addCloth(supp);
         

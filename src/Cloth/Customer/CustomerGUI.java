@@ -164,7 +164,9 @@ public class CustomerGUI extends javax.swing.JFrame {
 
     private void getSelectedProductActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_getSelectedProductActionPerformed
         // TODO add your handling code here:
+        
         String clothType = (String)type.getSelectedItem();
+        //customerSender.setProductGUI(clothType);//add
         customerSender.requestCatalog(clothType);
     }//GEN-LAST:event_getSelectedProductActionPerformed
 
@@ -240,25 +242,13 @@ public class CustomerGUI extends javax.swing.JFrame {
         type.setEnabled(true);
         getSelectedProduct.setEnabled(true);
     }
-    public void showResult(Cloth calcObj) {
-        /*
-        if (calcObj.isSuccess()) {
-            System.out.println("\n[CalcSender] Calculation - operation: " + calcObj.getOperation());
-            System.out.println("[CalcSender] Calculation - operand1 : " + calcObj.getOperand1());
-            System.out.println("[CalcSender] Calculation - operand2 : " + calcObj.getOperand2());
-            System.out.println("[CalcSender] Calculation - result   : " + calcObj.getResult());
-            System.out.println("[CalcSender] Calculation - info   : " + calcObj.getInfo());
-        } else {
-            System.out.println("\n[CalcSender]" + calcObj.getInfo());
-        } 
-        */
-        
-        //JOptionPane.showMessageDialog(new JFrame(), calcObj.getInfo());
+    public void showResult(String action) {
+        JOptionPane.showMessageDialog(new JFrame(), action);
     }
     public void showGui() {
 	pack();
 	Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-	int centerX = (int)screenSize.getWidth() / 2;
+	int centerX = (int)screenSize.getWidth() / 4;
 	int centerY = (int)screenSize.getHeight() / 2;
 	setLocation(centerX - getWidth() / 2, centerY - getHeight() / 2);
 	super.setVisible(true);

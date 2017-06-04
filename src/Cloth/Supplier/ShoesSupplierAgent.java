@@ -87,7 +87,6 @@ public class ShoesSupplierAgent extends Agent{
             sd.addProperties(new Property("Shoes1", "slipper"));
             sd.addProperties(new Property("Shoes2", "ballerina"));
             sd.addProperties(new Property("Shoes3", "boots"));
-            sd.addProperties(new Property("Shoes4", "heels"));
             dfd.addServices(sd);
   		
             DFService.register(this, dfd);
@@ -121,7 +120,117 @@ public class ShoesSupplierAgent extends Agent{
                     }
                     
                     
-//                    INSERT HERE
+//                    to determine if the quantity box is not zero
+
+                        if(shoesSupp.getSlipperQty() != 0) {
+                              
+                            System.out.println("\nSlipper Information\n---------------------");
+                            System.out.println("Size: " + shoesSupp.getSlipperSize() + "\nColor: " +shoesSupp.getSlipperColor() + "\nQuantity: " +shoesSupp.getSlipperQty());
+                            String strObj = ""; 
+                            try
+                            {
+                                strObj = serializeObjectToString(shoesSupp);
+                            }
+                            catch (Exception ex)
+                            {
+                                System.out.println("\n[SupplierAgent] ObjToStr conversion error: " + ex.getMessage());
+                            }
+
+                            ACLMessage reply = new ACLMessage(ACLMessage.INFORM);
+
+                            reply.addReceiver(msg.getSender()); //get from envelope                       
+
+                            reply.setContent(strObj);                        
+                            send(reply);
+
+                            System.out.println("\n[SupplierAgent] Sending Message from Slipper!");
+                            System.out.println("[SupplierAgent] Receiver Agent                 : " + msg.getSender());
+                            System.out.println("[SupplierAgent] Message content [Base64 string]: " + msg.getContent());
+                            
+                        }//end if
+                        if(shoesSupp.getBallerinaQty() != 0){
+                              
+                            System.out.println("\nBallerina Information\n---------------------");
+                            System.out.println("Size: " + shoesSupp.getBallerinaSize() + "\nQuantity: " +shoesSupp.getBallerinaQty());
+                            String strObj = ""; 
+                            try
+                            {
+                                strObj = serializeObjectToString(shoesSupp);
+                            }
+                            catch (Exception ex)
+                            {
+                                System.out.println("\n[SupplierAgent] ObjToStr conversion error: " + ex.getMessage());
+                            }
+
+                            ACLMessage reply = new ACLMessage(ACLMessage.INFORM);
+
+                            reply.addReceiver(msg.getSender()); //get from envelope                       
+
+                            reply.setContent(strObj);                        
+                            send(reply);
+
+                            System.out.println("\n[SupplierAgent] Sending Message from Ballerina!");
+                            System.out.println("[SupplierAgent] Receiver Agent                 : " + msg.getSender());
+                            System.out.println("[SupplierAgent] Message content [Base64 string]: " + msg.getContent());
+                        
+                        }
+                        if(shoesSupp.getBootQty() != 0){
+                            System.out.println("\nBoot Information\n---------------------");
+                            System.out.println("Size: " + shoesSupp.getBootSize() + "\nColor: " +shoesSupp.getBootColor() + "\nQuantity: " +shoesSupp.getBootQty());
+                            String strObj = ""; 
+                            try
+                            {
+                                strObj = serializeObjectToString(shoesSupp);
+                            }
+                            catch (Exception ex)
+                            {
+                                System.out.println("\n[SupplierAgent] ObjToStr conversion error: " + ex.getMessage());
+                            }
+
+                            ACLMessage reply = new ACLMessage(ACLMessage.INFORM);
+
+                            reply.addReceiver(msg.getSender()); //get from envelope                       
+
+                            reply.setContent(strObj);                        
+                            send(reply);
+
+                            System.out.println("\n[SupplierAgent] Sending Message from Boot!");
+                            System.out.println("[SupplierAgent] Receiver Agent                 : " + msg.getSender());
+                            System.out.println("[SupplierAgent] Message content [Base64 string]: " + msg.getContent());
+                        
+                        }
+                        else{
+                            
+                            shoesSupp.setSuccess(false);
+                            shoesSupp.setInfo("Product add ERROR");
+                        
+                            System.out.println("Product add ERROR");
+                        
+
+                            String strObj = ""; 
+                            try
+                            {
+                                strObj = serializeObjectToString(shoesSupp);
+                            }
+                            catch (Exception ex)
+                            {
+                                System.out.println("\n[SupplierAgent] ObjToStr conversion error: " + ex.getMessage());
+                            }
+
+                            ACLMessage reply = new ACLMessage(ACLMessage.NOT_UNDERSTOOD);
+
+                            reply.addReceiver(msg.getSender()); //get from envelope                       
+
+                            reply.setContent(strObj);                        
+                            send(reply);
+
+                            System.out.println("\n[SupplierAgent] Sending Message!");
+                            System.out.println("[SupplierAgent] Receiver Agent                 : " + msg.getSender());
+                            System.out.println("[SupplierAgent] Message content [Base64 string]: " + msg.getContent());   
+                            System.out.println("\n[SupplierAgent] Clothes product fail to be updated!");                                              
+                        
+                        
+                        }//end else
                     
                     
 		}

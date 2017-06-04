@@ -7,6 +7,8 @@ package Cloth.Supplier;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -46,6 +48,10 @@ public class shoesSupplierGUI extends javax.swing.JFrame {
     
     public void appendLog(String text) {
         txtLog.append(text + "\n");        
+    }    
+    
+    public void popup(String text) {
+        JOptionPane.showMessageDialog(new JFrame(), text);
     }
     
     public void clearLog() {
@@ -227,14 +233,14 @@ public class shoesSupplierGUI extends javax.swing.JFrame {
                                     .addComponent(jLabel6)
                                     .addComponent(jLabel10))))
                         .addGap(6, 6, 6)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 13, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(checkService)
-                        .addGap(103, 103, 103))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 451, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 323, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap())))
+                        .addComponent(checkService)
+                        .addGap(160, 160, 160))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -276,9 +282,9 @@ public class shoesSupplierGUI extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
                         .addComponent(jButton2))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(42, 42, 42)
+                        .addGap(30, 30, 30)
                         .addComponent(checkService)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(18, 18, 18)
                         .addComponent(jScrollPane1)
                         .addGap(10, 10, 10)))
                 .addContainerGap())
@@ -316,20 +322,20 @@ public class shoesSupplierGUI extends javax.swing.JFrame {
         int qtyBt = Integer.parseInt(qtyL.getText());
         
         
-        Supplier supp = new Supplier();
-        supp.setClothColor(colorSl);
-        supp.setClothSize(sizeSl);
-        supp.setClothQuantity(qtySl);
+        shoesSupplier shoesSupp = new shoesSupplier();
+        shoesSupp.setSlipperColor(colorSl);
+        shoesSupp.setSlipperSize(sizeSl);
+        shoesSupp.setSlipperQty(qtySl);
         
-        supp.setClothColor(colorBl);
-        supp.setPantSize(sizeBl);
-        supp.setPantQuantity(qtyBl);
+        shoesSupp.setBallerinaColor(colorBl);
+        shoesSupp.setBallerinaSize(sizeBl);
+        shoesSupp.setBallerinaQty(qtyBl);
         
-        supp.setOnepieceColor(colorBt);
-        supp.setOnepieceSize(sizeBt);
-        supp.setOnepieceQuantity(qtyBt);
+        shoesSupp.setBootColor(colorBt);
+        shoesSupp.setBootSize(sizeBt);
+        shoesSupp.setBootQty(qtyBt);
         
-        myAgent.addShoes(supp);
+        myAgent.addShoes(shoesSupp);
     }//GEN-LAST:event_jButton2ActionPerformed
 
     /**

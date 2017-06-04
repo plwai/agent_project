@@ -30,8 +30,10 @@ import org.apache.commons.codec.binary.Base64;
  */
 public class CustomerAgent extends Agent{
     static final Base64 base64 = new Base64();
-    //Dummy Data for cloth
-    private ArrayList <Cloth> Baju = new ArrayList();
+    private order order = new order();
+    private Cloth baju;
+    private orderList list;
+    private CustomerRequest customerReq=new CustomerRequest();
     
 //    private void setBaju(){
 //        Cloth b = new Cloth("Jubah A","Blue","One-Piece","s");
@@ -69,7 +71,7 @@ public class CustomerAgent extends Agent{
         Object obj = null;
         try
         {    
-            ByteArrayInputStream arrayInputStream = new ByteArrayInputStream((byte[]) base64.decode(objectString));
+            ByteArrayInputStream arrayInputStream = new ByteArrayInputStream(base64.decode(objectString));
             GZIPInputStream gzipInputStream = new GZIPInputStream(arrayInputStream);
             ObjectInputStream objectInputStream = new ObjectInputStream(gzipInputStream);
             obj =  objectInputStream.readObject();
@@ -92,10 +94,9 @@ public class CustomerAgent extends Agent{
             ServiceDescription sd = new ServiceDescription();
             sd.setName(serviceName);
             sd.setType("Customer");
-            
-            sd.addProperties(new Property("type1", "Add Product to Cart"));
-            sd.addProperties(new Property("type2", "Remove Product from Cart"));
-            sd.addProperties(new Property("type3", "Disply Prodcut"));
+            sd.addProperties(new Property("Action1", "Add Product to Carts"));
+            sd.addProperties(new Property("Action2", "Remove Product from Carts"));
+            sd.addProperties(new Property("Action3", "Confirm"));
             dfd.addServices(sd);
   		
             DFService.register(this, dfd);
@@ -108,32 +109,43 @@ public class CustomerAgent extends Agent{
 	{
             public void action() {
                 ACLMessage msg = receive();
-                String clothType = new String();
+                String action= new String();
+                //CustomerRequest request= new CustomerRequest();
                 
 		if (msg != null) 
                 {   
                     String msgContent = msg.getContent();
                     
-                    System.out.println("\n[CalcAgentPlus] Message Received");
-                    System.out.println("[CalcAgentPlus] Sender Agent   : " + msg.getSender());
-                    System.out.println("[CalcAgentPlus] Message content [Base64 string]: " + msgContent);                    
+                    System.out.println("\n[CustomerAgentPlus] Message Received");
+                    System.out.println("[CustomerAgentPlus] Sender Agent   : " + msg.getSender());
+                    System.out.println("[CustomerAgentPlus] Message content [Base64 string]: " + msgContent);                    
                     
                     try
                     {
-                        clothType = (String)deserializeObjectFromString(msgContent);
+                        //request = (CustomerRequest)deserializeObjectFromString(msgContent);
+                        action = (String)deserializeObjectFromString(msgContent);
                     }
                     catch(Exception ex)
                     {
-                        System.out.println("\n[CalcAgentPlus] StrToObj conversion error: " + ex.getMessage());
+                        System.out.println("\n[CustomerAgentPlus] StrToObj conversion error: " + ex.getMessage());
                     }
                     
-                    if (clothType.equals("One-Piece")) {
-                        String Type = clothType;
-                        System.out.println(Type);
+                    if (action.equals("Add Product to Carts")) {
+                        //action
+//                        order order = new order();
+//                        orderList newOrder = request.getNewOrder();
+//                        order=request.getOrder();
+//                        order.addProduct(newOrder);
+//                        float totalPrice = order.getTotalPrice();
+//                        totalPrice=totalPrice+(newOrder.getQuantity()*newOrder.getBaju().getPrice());
+//                        order.setTotalPrice(totalPrice);
+//                        request.setOrder(order);
+//                        request.setSuccess(true);
+                        action="Product has been add to cart";
                         String strObj = ""; 
                         try
                         {
-                            strObj = serializeObjectToString(clothType);
+                            strObj = serializeObjectToString(action);
                         }
                         catch (Exception ex)
                         {
@@ -147,17 +159,18 @@ public class CustomerAgent extends Agent{
                         reply.setContent(strObj);                        
                         send(reply);
 
-                        System.out.println("\n[CalcAgentPlus] Sending Message!");
-                        System.out.println("[CalcAgentPlus] Receiver Agent                 : " + msg.getSender());
-                        System.out.println("[CalcAgentPlus] Message content [Base64 string]: " + msg.getContent());
+                        System.out.println("\n[CustomerAgentPlus] Sending Message!");
+                        System.out.println("[CustomerAgentPlus] Receiver Agent                 : " + msg.getSender());
+                        System.out.println("[CustomerAgentPlus] Message content [Base64 string]: " + msg.getContent());
                     }
-                    else {
+                    else if(action.equals("Remove Product from Carts")){
                         
-
+                        action="Product has been remove from cart";
                         String strObj = ""; 
                         try
                         {
-                            strObj = serializeObjectToString(clothType);
+                            strObj = serializeObjectToString(action);
+                            //strObj = serializeObjectToString(request);
                         }
                         catch (Exception ex)
                         {
@@ -171,13 +184,63 @@ public class CustomerAgent extends Agent{
                         reply.setContent(strObj);                        
                         send(reply);
 
-                        System.out.println("\n[CalcAgentPlus] Sending Message!");
-                        System.out.println("[CalcAgentPlus] Receiver Agent                 : " + msg.getSender());
-                        System.out.println("[CalcAgentPlus] Message content [Base64 string]: " + msg.getContent());                                  
-                    }                    
+                        System.out.println("\n[CustomerAgentPlus] Sending Message!");
+                        System.out.println("[CustomerAgentPlus] Receiver Agent                 : " + msg.getSender());
+                        System.out.println("[CustomerAgentPlus] Message content [Base64 string]: " + msg.getContent());                                  
+                    } 
+                    else if(action.equals("Confirm")){
+                        
+                        action="Send Order to seller";
+                        String strObj = ""; 
+                        try
+                        {
+                            strObj = serializeObjectToString(action);
+                            //strObj = serializeObjectToString(request);
+                        }
+                        catch (Exception ex)
+                        {
+                            System.out.println("\n[CalcAgentPlus] ObjToStr conversion error: " + ex.getMessage());
+                        }
+
+                        ACLMessage reply = new ACLMessage(ACLMessage.NOT_UNDERSTOOD);
+
+                        reply.addReceiver(msg.getSender()); //get from envelope                       
+
+                        reply.setContent(strObj);                        
+                        send(reply);
+
+                        System.out.println("\n[CustomerAgentPlus] Sending Message!");
+                        System.out.println("[CustomerAgentPlus] Receiver Agent                 : " + msg.getSender());
+                        System.out.println("[CustomerAgentPlus] Message content [Base64 string]: " + msg.getContent());                                  
+                    } 
+                    else{
+                        
+                        action="Error";
+                        String strObj = ""; 
+                        try
+                        {
+                            strObj = serializeObjectToString(action);
+                            //strObj = serializeObjectToString(request);
+                        }
+                        catch (Exception ex)
+                        {
+                            System.out.println("\n[CalcAgentPlus] ObjToStr conversion error: " + ex.getMessage());
+                        }
+
+                        ACLMessage reply = new ACLMessage(ACLMessage.NOT_UNDERSTOOD);
+
+                        reply.addReceiver(msg.getSender()); //get from envelope                       
+
+                        reply.setContent(strObj);                        
+                        send(reply);
+
+                        System.out.println("\n[CustomerAgentPlus] Sending Message!");
+                        System.out.println("[CustomerAgentPlus] Receiver Agent                 : " + msg.getSender());
+                        System.out.println("[CustomerAgentPlus] Message content [Base64 string]: " + msg.getContent());                                  
+                    } 
 		}
                 //setBaju();
-                System.out.println("[CalcAgentPlus] CyclicBehaviour Block");
+                System.out.println("[CustomerAgentPlus] CyclicBehaviour Block");
                 block();
             }
 	});

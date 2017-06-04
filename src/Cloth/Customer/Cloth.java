@@ -12,12 +12,16 @@ package Cloth.Customer;
  */
 public class Cloth {
     private String type, color, size, name;
-    
-    public Cloth( String name, String color, String type, String size){
+    float price;
+    public Cloth(){
+        
+    }
+    public Cloth( String name, String color, String type, String size, float price){
         this.name=name;
         this.type=type;
         this.size=size;
         this.color=color;
+        this.price=price;
     }
     
     public void setType(String type){
@@ -32,6 +36,9 @@ public class Cloth {
     public void setName(String name){
         this.name=name;
     }
+    public void setPrice(float price){
+        this.price=price;
+    }
     public String getType(){
         return type;
     }
@@ -43,5 +50,8 @@ public class Cloth {
     }
     public String getName(){
         return name;
+    }
+    public float getPrice(){
+        return price;
     }
 }

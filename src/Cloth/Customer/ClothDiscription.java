@@ -41,8 +41,8 @@ public class ClothDiscription extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        color = new javax.swing.JComboBox();
-        quantity = new javax.swing.JSpinner();
+        colorr = new javax.swing.JComboBox();
+        quantityy = new javax.swing.JSpinner();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         typee = new javax.swing.JLabel();
@@ -63,14 +63,14 @@ public class ClothDiscription extends javax.swing.JFrame {
 
         jLabel5.setText("Color");
 
-        color.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Red", "Blue", "Yellow", "Orange", "Purple" }));
-        color.addActionListener(new java.awt.event.ActionListener() {
+        colorr.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Red", "Blue", "Yellow", "Orange", "Purple" }));
+        colorr.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                colorActionPerformed(evt);
+                colorrActionPerformed(evt);
             }
         });
 
-        quantity.setModel(new javax.swing.SpinnerNumberModel(0, 0, 10, 1));
+        quantityy.setModel(new javax.swing.SpinnerNumberModel(1, 1, 10, 1));
 
         jButton1.setText("Add To Cart");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -120,8 +120,8 @@ public class ClothDiscription extends javax.swing.JFrame {
                             .addComponent(jLabel4))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(color, 0, 97, Short.MAX_VALUE)
-                            .addComponent(quantity)
+                            .addComponent(colorr, 0, 97, Short.MAX_VALUE)
+                            .addComponent(quantityy)
                             .addComponent(typee, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(namee, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(pricee, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -150,10 +150,10 @@ public class ClothDiscription extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel4)
-                    .addComponent(quantity, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(quantityy, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(color, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(colorr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jButton1)
@@ -165,17 +165,34 @@ public class ClothDiscription extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void colorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_colorActionPerformed
+    private void colorrActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_colorrActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_colorActionPerformed
+    }//GEN-LAST:event_colorrActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-        this.dispose();
+        super.setVisible(false);
+        //this.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+        orderList orderlist;
+        Cloth baju;
+        CustomerRequest request;
+        String type=typee.getText();
+        String name=namee.getText();
+        String action="Add Product to Carts";
+        //float price=(float)pricee.getText();
+        float price=(float)20.00;
+        String size=(String)sizee.getSelectedItem();
+        String color=(String)colorr.getSelectedItem();
+        int quantity = (int)quantityy.getValue();
+        baju=new Cloth(name,color,type,size,price);
+        orderlist= new orderList(quantity,baju);
+        request=new CustomerRequest(action,orderlist);
+        customerSender.ProductToCart(action, orderlist, 0);
+        
         //customerSender.
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -201,6 +218,10 @@ public class ClothDiscription extends javax.swing.JFrame {
 	int centerY = (int)screenSize.getHeight() / 2;
 	setLocation(centerX - getWidth() / 2, centerY - getHeight() / 2);
 	super.setVisible(true);
+    }
+    
+    public void closeGui() {
+	this.dispose();
     }
     /**
      * @param args the command line arguments
@@ -239,7 +260,7 @@ public class ClothDiscription extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JComboBox color;
+    private javax.swing.JComboBox colorr;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
@@ -250,7 +271,7 @@ public class ClothDiscription extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel namee;
     private javax.swing.JLabel pricee;
-    private javax.swing.JSpinner quantity;
+    private javax.swing.JSpinner quantityy;
     private javax.swing.JComboBox sizee;
     private javax.swing.JLabel typee;
     // End of variables declaration//GEN-END:variables

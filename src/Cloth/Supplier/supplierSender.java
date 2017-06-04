@@ -83,7 +83,7 @@ public class supplierSender extends Agent {
         suppGui = new supplierGui(this);
         suppGui.showGui();
         
-         //for receiving calculation result	
+         	
          addBehaviour(new CyclicBehaviour(this) 
 	{            
             public void action() 
@@ -92,32 +92,26 @@ public class supplierSender extends Agent {
                 
 		if (msg != null) {
                     suppGui.appendLog("\n");
-                    suppGui.appendLog("Message received from " + msg.getSender());
+                    suppGui.appendLog("[supplierSender] Message received from " + msg.getSender());
                     
                     String msgContent = msg.getContent();
-                    suppGui.appendLog("Message content [Base64 string]: " + msgContent);
-                    suppGui.appendLog("Msg performative: " + ACLMessage.getPerformative(msg.getPerformative()));                   
+                    suppGui.appendLog("[supplierSender] Message content [Base64 string]: " + msgContent);
+                    suppGui.appendLog("[supplierSender] Msg performative: " + ACLMessage.getPerformative(msg.getPerformative())); 
+                    //suppGui.popup("Clothes Products added");
                     
                     try
                     {
-                        Supplier supp = (Supplier)deserializeObjectFromString(msgContent);
-                        
-                        if (supp.isSuccess()) {                                                    
-                            suppGui.appendLog("Cloth - info   : " + supp.getInfo());
-                        } else {
-                            suppGui.appendLog(" Cloth - info   : " + supp.getInfo());
-                            suppGui.appendLog("Msg performative: " + ACLMessage.getPerformative(msg.getPerformative()));
-                        }
+                        Supplier supp = (Supplier)deserializeObjectFromString(msgContent);  
                         
                         //suppGui.showResult(supp);                                                
                     }
                     catch(Exception ex)
                     {
-                        suppGui.appendLog("StrToObj conversion error: " + ex.getMessage());
+                        suppGui.appendLog("[supplierSender] StrToObj conversion error: " + ex.getMessage());
                     }
                 }
                 
-                suppGui.appendLog("[CalcAgentSupplier] CyclicBehaviour Block");
+                suppGui.appendLog("[supplierSender] CyclicBehaviour Block");
                 block();
             }
         });
@@ -126,6 +120,7 @@ public class supplierSender extends Agent {
     public void getSupplierServiceAgent() {
   	try {
             String serviceType = "basic-Supplier";
+            suppGui.clearLog();
             suppGui.appendLog("[supplierSender]Searching the DF/Yellow-Pages for " + serviceType + " service");
             suppGui.appendLog("[supplierSender]Service properties:Add Tshirt");
             
@@ -176,10 +171,11 @@ public class supplierSender extends Agent {
     
     public void addCloth(Supplier supp) {
         suppGui.clearLog();
+        suppGui.appendLog("[shoesSupplierSender]Product successfully added");
         suppGui.appendLog("[supplierSender]Receiving updated request object from suppGui");
-        suppGui.appendLog("[supplierSender]Cloths information. color: " + supp.getClothColor() + " size: " + supp.getClothSize() + "quantity: " + supp.getClothQuantity());
-        suppGui.appendLog("[supplierSender]Pants information.  size: " + supp.getPantSize() + "quantity: " + supp.getPantQuantity());
-        suppGui.appendLog("[supplierSender]Onepiece information. color: " + supp.getOnepieceColor() + " size: " + supp.getOnepieceSize() + "quantity: " + supp.getOnepieceQuantity());
+        suppGui.appendLog("\nCloths information. \n\tColor: " + supp.getClothColor() + " \n\tsize: " + supp.getClothSize() + "\n\tquantity: " + supp.getClothQuantity());
+        suppGui.appendLog("\n\n\nPants information.  \n\tsize: " + supp.getPantSize() + "\n\tquantity: " + supp.getPantQuantity());
+        suppGui.appendLog("\n\nOnepiece information. \n\tcolor: " + supp.getOnepieceColor() + " \n\tsize: " + supp.getOnepieceSize() + "\n\tquantity: " + supp.getOnepieceQuantity());
         suppGui.appendLog("\n");
         
         //Send messages to "cap - CalcAgentPlus"  

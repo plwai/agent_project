@@ -92,32 +92,25 @@ public class ShoesSupplierSender extends Agent {
                 
 		if (msg != null) {
                     shoeGui.appendLog("\n");
-                    shoeGui.appendLog("Message received from " + msg.getSender());
+                    shoeGui.appendLog("[ShoesSuppliesSender] Message received from " + msg.getSender());
                     
                     String msgContent = msg.getContent();
-                    shoeGui.appendLog("Message content [Base64 string]: " + msgContent);
-                    shoeGui.appendLog("Msg performative: " + ACLMessage.getPerformative(msg.getPerformative()));                   
+                    shoeGui.appendLog("[ShoesSuppliesSender] Message content [Base64 string]: " + msgContent);
+                    shoeGui.appendLog("[ShoesSuppliesSender] Msg performative: " + ACLMessage.getPerformative(msg.getPerformative()));                   
                     
                     try
                     {
                         shoesSupplier shoesSupp = (shoesSupplier)deserializeObjectFromString(msgContent);
                         
-                        if (shoesSupp.isSuccess()) {                                                    
-                            shoeGui.appendLog("Shoes - info   : " + shoesSupp.getInfo());
-                        } else {
-                            shoeGui.appendLog(" Shoes - info   : " + shoesSupp.getInfo());
-                            shoeGui.appendLog("Msg performative: " + ACLMessage.getPerformative(msg.getPerformative()));
-                        }
-                        
                         //suppGui.showResult(supp);                                                
                     }
                     catch(Exception ex)
                     {
-                        shoeGui.appendLog("StrToObj conversion error: " + ex.getMessage());
+                        //shoeGui.appendLog("StrToObj conversion error: " + ex.getMessage());
                     }
                 }
                 
-                shoeGui.appendLog("[ShoesSuppliesAgent] CyclicBehaviour Block");
+                shoeGui.appendLog("[ShoesSuppliesSender] CyclicBehaviour Block");
                 block();
             }
         });
@@ -126,8 +119,9 @@ public class ShoesSupplierSender extends Agent {
     public void getCalcServiceAgent() {
   	try {
             String serviceType = "Shoes basic-Supplier";
-            shoeGui.appendLog("[supplierSender]Searching the DF/Yellow-Pages for " + serviceType + " service");
-            shoeGui.appendLog("[supplierSender]Service properties:Add Tshirt");
+            shoeGui.clearLog();
+            shoeGui.appendLog("[shoesSupplierSender]Searching the DF/Yellow-Pages for " + serviceType + " service");
+            shoeGui.appendLog("[shoesSupplierSender]Service properties:Add Shoes");
             
             // Build the description used as template for the search
             DFAgentDescription template = new DFAgentDescription();
@@ -137,7 +131,6 @@ public class ShoesSupplierSender extends Agent {
             templateSd.addProperties(new Property("Shoes1", "slipper"));
             templateSd.addProperties(new Property("Shoes2", "ballerina"));
             templateSd.addProperties(new Property("Shoes3", "boots"));
-            templateSd.addProperties(new Property("Shoes4", "heels"));
             template.addServices(templateSd);
   		
             SearchConstraints sc = new SearchConstraints();
@@ -146,12 +139,12 @@ public class ShoesSupplierSender extends Agent {
   		
             DFAgentDescription[] results = DFService.search(this, template, sc);
             if (results.length > 0) {
-  		shoeGui.appendLog("[supplierSender]Agent "+getLocalName()+" found the following " + serviceType + " services:");
+  		shoeGui.appendLog("[shoesSupplierSender]Agent "+getLocalName()+" found the following " + serviceType + " services:");
   		for (int i = 0; i < results.length; ++i) {
                     DFAgentDescription dfd = results[i];
                     AID agentAID = dfd.getName();
-                    //calcGui.popup("Agent name: " + agentAID);
-                    shoeGui.appendLog("[supplierSender]Agent name: " + agentAID);
+                    shoeGui.popup("Agent name: " + agentAID);
+                    shoeGui.appendLog("[shoesSupplierSender]Agent name: " + agentAID);
                     shoeGui.appendLog("\n"); 
   		}
                 
@@ -163,8 +156,8 @@ public class ShoesSupplierSender extends Agent {
                 //calcGui.enabledGUI();
             }	
             else {
-                shoeGui.appendLog("[supplierSender]Agent "+getLocalName()+" did not find any " + serviceType + " service");
-               // suppGui.popup("No " + serviceType + " agent service found!");
+                shoeGui.appendLog("[shoesSupplierSender]Agent "+getLocalName()+" did not find any " + serviceType + " service");
+                shoeGui.popup("No " + serviceType + " agent service found!");
             }
   	}
   	catch (FIPAException fe) {
@@ -173,27 +166,28 @@ public class ShoesSupplierSender extends Agent {
         shoeGui.appendLog("\n");        
     }
     
-    public void addShoes(Supplier supp) {
+    public void addShoes(shoesSupplier shoesSupp) {
         shoeGui.clearLog();
-        shoeGui.appendLog("[supplierSender]Receiving updated request object from suppGui");
-        shoeGui.appendLog("[supplierSender]Cloths information. color: " + supp.getClothColor() + " size: " + supp.getClothSize() + "quantity: " + supp.getClothQuantity());
-        shoeGui.appendLog("[supplierSender]Pants information.  size: " + supp.getPantSize() + "quantity: " + supp.getPantQuantity());
-        shoeGui.appendLog("[supplierSender]Onepiece information. color: " + supp.getOnepieceColor() + " size: " + supp.getOnepieceSize() + "quantity: " + supp.getOnepieceQuantity());
+        shoeGui.appendLog("[shoesSupplierSender]Product successfully added");
+        shoeGui.appendLog("[shoesSupplierSender]Receiving updated request object from suppGui");
+        shoeGui.appendLog("\nCloths information. \n\tcolor: " + shoesSupp.getSlipperColor() + " \n\tsize: " + shoesSupp.getSlipperSize() + "\n\tquantity: " + shoesSupp.getSlipperQty());
+        shoeGui.appendLog("\nPants information.  \n\tcolor: " +  shoesSupp.getBallerinaColor() +" \n\tsize: " + shoesSupp.getBallerinaSize() + "\n\tquantity: " + shoesSupp.getBallerinaQty());
+        shoeGui.appendLog("\nOnepiece information. \n\tcolor: " + shoesSupp.getBootColor() + " \n\tsize: " + shoesSupp.getBootSize() + "\n\tquantity: " + shoesSupp.getBootQty());
         shoeGui.appendLog("\n");
         
         //Send messages to "cap - CalcAgentPlus"  
-        shoeGui.appendLog("[supplierSender]Preparing ACL msg: INFORM");   
+        shoeGui.appendLog("[shoesSupplierSender]Preparing ACL msg: INFORM");   
 	ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
         
-        shoeGui.appendLog("[supplierSender]Convert Supplier supp to String Base64");   
+        shoeGui.appendLog("[shoesSupplierSender]Convert Supplier supp to String Base64");   
         String strObj = ""; 
         try
         {
-            strObj = serializeObjectToString(supp);
+            strObj = serializeObjectToString(shoesSupp);
         }
         catch (Exception ex)
         {
-            System.out.println("\n[supplierSender] ObjToStr conversion error: " + ex.getMessage());
+            System.out.println("\n[shoesSupplierSender] ObjToStr conversion error: " + ex.getMessage());
         }
         
 	msg.setContent(strObj);
@@ -202,8 +196,8 @@ public class ShoesSupplierSender extends Agent {
         msg.addReceiver(calcServiceAgentAID);
         send(msg);
         
-        shoeGui.appendLog("[supplierSender]Sending Message to cap");
-        shoeGui.appendLog("[supplierSender]Message content [Base64 string]: " + strObj);   
+        shoeGui.appendLog("[shoesSupplierSender]Sending Message to cap");
+        shoeGui.appendLog("[shoesSupplierSender]Message content [Base64 string]: " + strObj);   
     }
     
 }

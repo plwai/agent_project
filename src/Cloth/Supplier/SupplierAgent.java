@@ -120,12 +120,126 @@ public class SupplierAgent extends Agent{
                     }
                     
                     
-//                    INSERT HERE
+//                    to determine if the quantity box is not zero
+
+                        if(supp.getClothQuantity() != 0) {
+                              
+                            //int ShirtInfo = supp.getClothQuantity();
+                            //System.out.println("[SupplierAgent] Added Shirt quantity is " + ShirtInfo);
+                            System.out.println("\nShirt Information");
+                            System.out.println("\nSize: " + supp.getClothSize() + "\nColor: " +supp.getClothColor() + "\nQuantity: " +supp.getClothQuantity());
+                            String strObj = ""; 
+                            try
+                            {
+                                strObj = serializeObjectToString(supp);
+                            }
+                            catch (Exception ex)
+                            {
+                                System.out.println("\n[SupplierAgent] ObjToStr conversion error: " + ex.getMessage());
+                            }
+
+                            ACLMessage reply = new ACLMessage(ACLMessage.INFORM);
+
+                            reply.addReceiver(msg.getSender()); //get from envelope                       
+
+                            reply.setContent(strObj);                        
+                            send(reply);
+
+                            System.out.println("\n[SupplierAgent] Sending Message from Shirt!");
+                            System.out.println("[SupplierAgent] Receiver Agent                 : " + msg.getSender());
+                            System.out.println("[SupplierAgent] Message content [Base64 string]: " + msg.getContent());
+                            
+                        }//end if
+                        if(supp.getPantQuantity() != 0){
+                              
+                            //int pantInfo = supp.getPantQuantity();
+                            //System.out.println("[SupplierAgent] Added Pants quantity is " + pantInfo);
+                            System.out.println("\nPants Information");
+                            System.out.println("\nSize: " + supp.getPantSize() + "\nQuantity: " +supp.getClothQuantity());
+                            String strObj = ""; 
+                            try
+                            {
+                                strObj = serializeObjectToString(supp);
+                            }
+                            catch (Exception ex)
+                            {
+                                System.out.println("\n[SupplierAgent] ObjToStr conversion error: " + ex.getMessage());
+                            }
+
+                            ACLMessage reply = new ACLMessage(ACLMessage.INFORM);
+
+                            reply.addReceiver(msg.getSender()); //get from envelope                       
+
+                            reply.setContent(strObj);                        
+                            send(reply);
+
+                            System.out.println("\n[SupplierAgent] Sending Message from Pants!");
+                            System.out.println("[SupplierAgent] Receiver Agent                 : " + msg.getSender());
+                            System.out.println("[SupplierAgent] Message content [Base64 string]: " + msg.getContent());
+                        
+                        }
+                        if(supp.getOnepieceQuantity() != 0){
+                            System.out.println("\nOnepiece Information");
+                            System.out.println("\nSize: " + supp.getOnepieceSize() + "\nColor: " +supp.getOnepieceColor() + "\nQuantity: " +supp.getOnepieceQuantity());
+                            String strObj = ""; 
+                            try
+                            {
+                                strObj = serializeObjectToString(supp);
+                            }
+                            catch (Exception ex)
+                            {
+                                System.out.println("\n[SupplierAgent] ObjToStr conversion error: " + ex.getMessage());
+                            }
+
+                            ACLMessage reply = new ACLMessage(ACLMessage.INFORM);
+
+                            reply.addReceiver(msg.getSender()); //get from envelope                       
+
+                            reply.setContent(strObj);                        
+                            send(reply);
+
+                            System.out.println("\n[SupplierAgent] Sending Message from Onepiece!");
+                            System.out.println("[SupplierAgent] Receiver Agent                 : " + msg.getSender());
+                            System.out.println("[SupplierAgent] Message content [Base64 string]: " + msg.getContent());
+                        
+                        }
+                        else{
+                            
+                            supp.setSuccess(false);
+                            supp.setInfo("Product add ERROR");
+                        
+                            System.out.println("Product add ERROR");
+                        
+
+                            String strObj = ""; 
+                            try
+                            {
+                                strObj = serializeObjectToString(supp);
+                            }
+                            catch (Exception ex)
+                            {
+                                System.out.println("\n[SupplierAgent] ObjToStr conversion error: " + ex.getMessage());
+                            }
+
+                            ACLMessage reply = new ACLMessage(ACLMessage.NOT_UNDERSTOOD);
+
+                            reply.addReceiver(msg.getSender()); //get from envelope                       
+
+                            reply.setContent(strObj);                        
+                            send(reply);
+
+                            System.out.println("\n[SupplierAgent] Sending Message!");
+                            System.out.println("[SupplierAgent] Receiver Agent                 : " + msg.getSender());
+                            System.out.println("[SupplierAgent] Message content [Base64 string]: " + msg.getContent());   
+                            System.out.println("\n[SupplierAgent] Clothes product fail to be updated!");                                              
+                        
+                        
+                        }//end else
                     
                     
 		}
                 
-                System.out.println("[supplierAgent] CyclicBehaviour Block");
+                System.out.println("[supplierAgent] CyclicBehaviour Block End");
                 block();
             }
 	});

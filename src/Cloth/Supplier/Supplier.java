@@ -26,10 +26,23 @@ public class Supplier implements Serializable{
     public String info;
     public boolean success = false;
    
-//   public Supplier(String Cloth, String Pant, String Onepiece){
-//       this.cloth = Cloth;
-//       this.pant = Pant;
-//       this.onepiece = Onepiece;
+//   public Supplier(String ClothColor, String ClothSize, String ClothPrice, int ClothQuantity, 
+//                   String PantSize, String PantPrice, int PantQuantity, 
+//                   String OnepieceColor, String OnepieceSize, String OnepiecePrice, int OnepieceQuantity){
+//       
+//       this.clothColor = ClothColor;
+//       this.clothSize = ClothSize;
+//       this.clothPrice = ClothPrice;
+//       this.clothQuantity = ClothQuantity;
+//       
+//       this.pantSize = PantSize;
+//       this.pantPrice = PantPrice;
+//       this.pantQuantity = PantQuantity;
+//       
+//       this.onepieceColor = OnepieceColor;
+//       this.onepieceSize = OnepieceSize;
+//       this.onepiecePrice = OnepiecePrice;
+//       this.onepieceQuantity = OnepieceQuantity;
 //   }
 
 

@@ -1,5 +1,10 @@
 package Cloth.Customer;
 
+import java.awt.Dimension;
+import java.awt.Toolkit;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -11,11 +16,16 @@ package Cloth.Customer;
  * @author on
  */
 public class Cart extends javax.swing.JFrame {
-
+    private CustomerSender customerSender;
     /**
      * Creates new form Cart
      */
     public Cart() {
+        initComponents();
+    }
+    public Cart(CustomerSender a) {
+        super(a.getLocalName());		
+        customerSender = a;
         initComponents();
     }
 
@@ -30,73 +40,74 @@ public class Cart extends javax.swing.JFrame {
 
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        CartTable = new javax.swing.JTable();
         jSeparator1 = new javax.swing.JSeparator();
         ConfirmButton = new javax.swing.JButton();
-        resetButton = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
-        GrandTotal = new javax.swing.JTextField();
+        GrandTotal = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jLabel1.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
         jLabel1.setText("Cart");
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        CartTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Product Name", "Color", "Quantity", "Price (PerUnit)"
+                "Product Name", "Color", "Quantity", "Price (PerUnit)", "Total Price"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.Float.class
+                java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.Float.class, java.lang.Float.class
             };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(jTable1);
-
-        ConfirmButton.setText("Confirm");
-
-        resetButton.setText("Reset");
-
-        jLabel2.setText("Grand Total  (RM ): ");
-
-        GrandTotal.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                GrandTotalActionPerformed(evt);
+        CartTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                CartTableMouseClicked(evt);
             }
         });
+        jScrollPane1.setViewportView(CartTable);
+
+        ConfirmButton.setText("Confirm");
+        ConfirmButton.setEnabled(false);
+        ConfirmButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ConfirmButtonActionPerformed(evt);
+            }
+        });
+
+        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel2.setText("Grand Total  (RM ): ");
+
+        GrandTotal.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        GrandTotal.setText("0.00");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(179, 179, 179)
-                .addComponent(jLabel1)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 5, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(jLabel2)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(GrandTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(resetButton, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(ConfirmButton, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addComponent(jSeparator1))
+                        .addComponent(ConfirmButton, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(GrandTotal, javax.swing.GroupLayout.DEFAULT_SIZE, 60, Short.MAX_VALUE))
+                    .addComponent(jSeparator1)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel1)
+                .addGap(245, 245, 245))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -110,18 +121,30 @@ public class Cart extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(ConfirmButton)
-                    .addComponent(resetButton)
                     .addComponent(jLabel2)
-                    .addComponent(GrandTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(17, Short.MAX_VALUE))
+                    .addComponent(GrandTotal))
+                .addContainerGap(14, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void GrandTotalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GrandTotalActionPerformed
+    private void CartTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_CartTableMouseClicked
         // TODO add your handling code here:
-    }//GEN-LAST:event_GrandTotalActionPerformed
+        int RemoveOrderId=CartTable.getSelectedRow();
+        Cloth c= new Cloth( "", "", "", "", 0);
+        String action = "Remove Product from Carts";
+        orderList order = new orderList(0, c);
+        customerSender.ProductToCart(action, order, RemoveOrderId);
+    }//GEN-LAST:event_CartTableMouseClicked
+
+    private void ConfirmButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ConfirmButtonActionPerformed
+        // TODO add your handling code here:
+        Cloth c= new Cloth( "", "", "", "", 0);
+        String action = "Confirm";
+        orderList order = new orderList(0, c);
+        customerSender.ProductToCart(action, order, 0);
+    }//GEN-LAST:event_ConfirmButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -158,15 +181,46 @@ public class Cart extends javax.swing.JFrame {
             }
         });
     }
-
+    public void enabledGUI() {
+        ConfirmButton.setEnabled(true);
+    }
+    public void disabledGUI() {
+        ConfirmButton.setEnabled(false);
+    }
+            
+    public void setTable(order displayOrder) {
+        int row=displayOrder.getProductList().size();
+        DefaultTableModel model = (DefaultTableModel) CartTable.getModel();
+        model.setRowCount(0);
+        for (int i = 0; i < row; i++) {
+            model.addRow(new Object[]{  displayOrder.getProductList().get(i).getBaju().getName()+"  ("+displayOrder.getProductList().get(i).getBaju().getSize()+")",
+                                        displayOrder.getProductList().get(i).getBaju().getColor(),
+                                        displayOrder.getProductList().get(i).getQuantity(),
+                                        displayOrder.getProductList().get(i).getBaju().getPrice(),
+                                        (displayOrder.getProductList().get(i).getBaju().getPrice()*displayOrder.getProductList().get(i).getQuantity())
+                                    });
+          }
+        GrandTotal.setText(Float.toString(displayOrder.getTotalPrice()));
+        ConfirmButton.setEnabled(true);
+    }
+    public void closeGui() {
+        this.dispose();
+    }
+    public void showGui() {
+	pack();
+	Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+	int centerX = ((int)screenSize.getWidth() / 4)*3;
+	int centerY = (int)screenSize.getHeight() / 2;
+	setLocation(centerX - getWidth() / 2, centerY - getHeight() / 2);
+	super.setVisible(true);
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTable CartTable;
     private javax.swing.JButton ConfirmButton;
-    private javax.swing.JTextField GrandTotal;
+    private javax.swing.JLabel GrandTotal;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JButton resetButton;
     // End of variables declaration//GEN-END:variables
 }

@@ -5,43 +5,33 @@
  */
 package Cloth.Customer;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author on
  */
 public class order {
-    String name, color, size;
-    float   price, total; 
-    int     quantity;
+    ArrayList<orderList> ProductCart;
+    float   totalPrice; 
     
-    public void setName(String name){
-        this.name=name;
+    public order(){
+        ProductCart = new ArrayList();
+        totalPrice=0;
     }
-    public void setColor(String color){
-        this.color=color;
+    public void addProduct(orderList product){
+        this.ProductCart.add(product);
     }
-    public void setSize(String size){
-        this.size=size;
+    public void setProductCart(ArrayList<orderList> product){
+        this.ProductCart=product;
     }
-    public void setPrice(float price){
-        this.price=price;
+    public ArrayList<orderList> getProductList(){
+        return ProductCart;
     }
-    public void setName(int quantity){
-        this.quantity=quantity;
+    public void setTotalPrice(float totalPrice){
+        this.totalPrice=totalPrice;
     }
-    public String getName(){
-        return name;
-    }
-    public String getColor(){
-        return color;
-    }
-    public String getSize(){
-        return size;
-    }
-    public float getPrice(){
-        return price;
-    }
-    public int getQuantity(){
-        return quantity;
+    public float getTotalPrice(){
+        return totalPrice;
     }
 }
