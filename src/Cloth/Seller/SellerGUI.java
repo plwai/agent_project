@@ -318,7 +318,7 @@ public class SellerGUI extends javax.swing.JFrame {
         newItem.setItemType(newType.getText());
         newItem.setItemColor(newColor.getText());
         newItem.setItemSize(newSize.getText());
-        newItem.setItemQuantity(newQuantity.getText());
+        newItem.setItemQuantity(Integer.parseInt(newQuantity.getText()));
         
         SellerStore storeObj = new SellerStore();
         storeObj.setServiceType(service);

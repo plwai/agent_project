@@ -18,7 +18,7 @@ public class ItemProperties implements Serializable{
     private String itemType;
     private String itemSize;
     private String itemColor;
-    private String itemQuantity;
+    private int itemQuantity;
     private String itemSells;
     private int id;
 
@@ -27,8 +27,17 @@ public class ItemProperties implements Serializable{
         itemType = "";
         itemSize = "";
         itemColor = "";
-        itemQuantity = "";
+        itemQuantity = 0;
         itemSells = "";
+    }
+
+    public ItemProperties(String itemName, String itemType, String itemSize, String itemColor, int itemQuantity, int id) {
+        this.itemName = itemName;
+        this.itemType = itemType;
+        this.itemSize = itemSize;
+        this.itemColor = itemColor;
+        this.itemQuantity = itemQuantity;
+        this.id = id;
     }
 
     public int getId() {
@@ -71,11 +80,11 @@ public class ItemProperties implements Serializable{
         this.itemColor = itemColor;
     }
 
-    public String getItemQuantity() {
+    public int getItemQuantity() {
         return itemQuantity;
     }
 
-    public void setItemQuantity(String itemQuantity) {
+    public void setItemQuantity(int itemQuantity) {
         this.itemQuantity = itemQuantity;
     }
 

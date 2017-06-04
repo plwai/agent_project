@@ -37,7 +37,6 @@ public class SellerAgentInventory extends Agent
 {	
     static final Base64 base64 = new Base64();
     private Map<String, AID> AIDMap = new HashMap<String, AID>();;
-    static Inventory storeInventory = new Inventory();
     
     public String serializeObjectToString(Object object) throws IOException 
     {
@@ -88,12 +87,12 @@ public class SellerAgentInventory extends Agent
         String serviceName = "seller-agent";
         
         // Initialize fake database
-        ItemProperties item = new ItemProperties();
+        /*ItemProperties item = new ItemProperties();
 
         item.setId(1);
         item.setItemColor("Blue");
         item.setItemName("The T-shirt");
-        item.setItemQuantity("50");
+        item.setItemQuantity(50);
         item.setItemSize("L");
         item.setItemType("shirt");
         
@@ -119,7 +118,7 @@ public class SellerAgentInventory extends Agent
         item3.setItemSize("L");
         item3.setItemType("pant");
 
-        storeInventory.addItem(item3);
+        storeInventory.addItem(item3);*/
         
   	try {
             DFAgentDescription dfd = new DFAgentDescription();
@@ -161,6 +160,10 @@ public class SellerAgentInventory extends Agent
                         System.out.println("\n[SellerAgentInventory] StrToObj conversion error: " + ex.getMessage());
                     }
                     
+                    Inventory storeInventory = new Inventory();
+                    // Get DB data
+                    storeInventory.loadAllData();
+                    
                     if (store.getServiceType().equals("check inventory")) {
                         store.setSummary(storeInventory);
                         store.setIsSuccess(true);
@@ -193,7 +196,7 @@ public class SellerAgentInventory extends Agent
                         List<ItemProperties> itemSummary = storeInventory.getItemSummary();
                         
                         if(productId <= itemSummary.size()) {
-                            itemSummary.get(productId - 1).setItemQuantity(Integer.toString(Integer.parseInt(itemSummary.get(productId - 1).getItemQuantity()) + quantity));
+                            storeInventory.restock(productId, quantity);
                             store.setIsSuccess(true);
                             store.setInfo("Successfully Restock");
                         }

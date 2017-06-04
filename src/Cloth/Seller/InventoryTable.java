@@ -57,6 +57,7 @@ public class InventoryTable extends JDialog {
         newRow.add(itemProp.getItemType());
         newRow.add(itemProp.getItemSize());
         newRow.add(itemProp.getItemColor());
+        System.out.println(itemProp.getItemQuantity());
         newRow.add(itemProp.getItemQuantity());
         //newRow.add(itemProp.getItemSells());
         
