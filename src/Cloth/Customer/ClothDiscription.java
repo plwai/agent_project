@@ -15,6 +15,7 @@ import java.util.ArrayList;
  */
 public class ClothDiscription extends javax.swing.JFrame {
     private CustomerSender customerSender;
+    private int id;
     /**
      * Creates new form ClothDiscription
      */
@@ -177,7 +178,7 @@ public class ClothDiscription extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        orderList orderlist;
+        Order orderlist;
         Cloth baju;
         CustomerRequest request;
         String type=typee.getText();
@@ -188,8 +189,8 @@ public class ClothDiscription extends javax.swing.JFrame {
         String size=(String)sizee.getSelectedItem();
         String color=(String)colorr.getSelectedItem();
         int quantity = (int)quantityy.getValue();
-        baju=new Cloth(name,color,type,size,price);
-        orderlist= new orderList(quantity,baju);
+        baju=new Cloth(name,color,type,size,price,id);
+        orderlist= new Order(quantity,baju);
         request=new CustomerRequest(action,orderlist);
         customerSender.ProductToCart(action, orderlist, 0);
         
@@ -200,7 +201,7 @@ public class ClothDiscription extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_sizeeActionPerformed
     
-    public void setBajuData(String type, String name, float price, ArrayList<String> size){
+    public void setBajuData(String type, String name, float price, ArrayList<String> size, int id){
         
         for(int i=0; i<size.size(); i++ )
         {
@@ -210,6 +211,7 @@ public class ClothDiscription extends javax.swing.JFrame {
         namee.setText(name);
         typee.setText(type);
         pricee.setText("RM "+price);        
+        this.id = id;
     }
     public void showGui() {
 	pack();

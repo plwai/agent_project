@@ -1,5 +1,7 @@
 package Cloth.Customer;
 
+import Cloth.Seller.Inventory;
+import Cloth.Seller.ItemProperties;
 import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.domain.DFService;
@@ -13,7 +15,15 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 import org.apache.commons.codec.binary.Base64;
@@ -30,9 +40,9 @@ import org.apache.commons.codec.binary.Base64;
  */
 public class CustomerAgent extends Agent{
     static final Base64 base64 = new Base64();
-    private order order = new order();
+    private OrderList order = new OrderList();
     private Cloth baju;
-    private orderList list;
+    private Order list;
     private CustomerRequest customerReq=new CustomerRequest();
     
 //    private void setBaju(){
@@ -88,14 +98,19 @@ public class CustomerAgent extends Agent{
     {
         String serviceName = "Customer-agent";
         
+        try {  
+            Class.forName("org.apache.derby.jdbc.ClientDriver");
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Inventory.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
   	try {
             DFAgentDescription dfd = new DFAgentDescription();
             dfd.setName(getAID());
             ServiceDescription sd = new ServiceDescription();
             sd.setName(serviceName);
             sd.setType("Customer");
-            sd.addProperties(new Property("Action1", "Add Product to Carts"));
-            sd.addProperties(new Property("Action2", "Remove Product from Carts"));
+            sd.addProperties(new Property("Action2", "Load Display"));
             sd.addProperties(new Property("Action3", "Confirm"));
             dfd.addServices(sd);
   		
@@ -109,118 +124,147 @@ public class CustomerAgent extends Agent{
 	{
             public void action() {
                 ACLMessage msg = receive();
-                String action= new String();
-                //CustomerRequest request= new CustomerRequest();
+                CustomerRequest cusReq= new CustomerRequest();
+                String action;
                 
 		if (msg != null) 
                 {   
                     String msgContent = msg.getContent();
                     
-                    System.out.println("\n[CustomerAgentPlus] Message Received");
-                    System.out.println("[CustomerAgentPlus] Sender Agent   : " + msg.getSender());
-                    System.out.println("[CustomerAgentPlus] Message content [Base64 string]: " + msgContent);                    
+                    System.out.println("\n[CustomerAgent] Message Received");
+                    System.out.println("[CustomerAgent] Sender Agent   : " + msg.getSender());
+                    System.out.println("[CustomerAgent] Message content [Base64 string]: " + msgContent);                    
                     
                     try
                     {
-                        //request = (CustomerRequest)deserializeObjectFromString(msgContent);
-                        action = (String)deserializeObjectFromString(msgContent);
+                        cusReq = (CustomerRequest)deserializeObjectFromString(msgContent);
                     }
                     catch(Exception ex)
                     {
-                        System.out.println("\n[CustomerAgentPlus] StrToObj conversion error: " + ex.getMessage());
+                        System.out.println("\n[CustomerAgent] StrToObj conversion error: " + ex.getMessage());
                     }
                     
-                    if (action.equals("Add Product to Carts")) {
-                        //action
-//                        order order = new order();
-//                        orderList newOrder = request.getNewOrder();
-//                        order=request.getOrder();
-//                        order.addProduct(newOrder);
-//                        float totalPrice = order.getTotalPrice();
-//                        totalPrice=totalPrice+(newOrder.getQuantity()*newOrder.getBaju().getPrice());
-//                        order.setTotalPrice(totalPrice);
-//                        request.setOrder(order);
-//                        request.setSuccess(true);
-                        action="Product has been add to cart";
+                    if(cusReq.getAction().equals("Confirm")){
+                        OrderList orders = cusReq.getOrder();
+                        Connection con;
+                        int receiptId, orderId;
+                        
+                        try {
+                            con = DriverManager.getConnection(  "jdbc:derby://localhost:1527/sample","app","app");
+                            
+                            Statement stmt=con.createStatement(); 
+                            ResultSet rs=stmt.executeQuery("SELECT * FROM RECEIPT ORDER BY ID DESC");  
+
+                            if(rs.next()){
+                                receiptId = rs.getInt(1) + 1;
+                            }
+                            else {
+                                receiptId = 1;
+                            }
+                            
+                            stmt=con.createStatement(); 
+                            rs=stmt.executeQuery("SELECT * FROM ORDERS ORDER BY ID DESC");  
+
+                            if(rs.next()){
+                                orderId = rs.getInt(1) + 1;
+                            }
+                            else {
+                                orderId = 1;
+                            }
+                            
+                            System.out.println(orderId);
+                            
+                            String query = " insert into RECEIPT (id)"
+                                    + " values (?)";
+                                    
+                            PreparedStatement preparedStmt = con.prepareStatement(query);
+                            preparedStmt.setInt (1, receiptId);
+
+                            preparedStmt.execute();
+                            
+                            for(Order order: orders.getProductList()) {
+                                try {  
+                                    Cloth cloth = order.getBaju();
+
+                                    query = " insert into ORDERS (id, ProductId, Quantity, ReceiptID)"
+                                    + " values (?, ?, ?, ?)";
+
+                                    preparedStmt = con.prepareStatement(query);
+                                    preparedStmt.setInt (1, orderId);
+                                    preparedStmt.setInt (2, cloth.getId());
+                                    preparedStmt.setInt (3, order.getQuantity());
+                                    preparedStmt.setInt (4, receiptId);
+
+                                    preparedStmt.execute();
+
+                                    orderId++;
+                                } catch (SQLException ex) {
+                                    Logger.getLogger(Inventory.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                            }
+
+                            con.close();
+                            
+                        } catch (SQLException ex) {
+                            Logger.getLogger(CustomerAgent.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+
+                        cusReq.setAction("Send Order to seller");
                         String strObj = ""; 
                         try
                         {
-                            strObj = serializeObjectToString(action);
+                            strObj = serializeObjectToString(cusReq);
                         }
                         catch (Exception ex)
                         {
                             System.out.println("\n[CalcAgentPlus] ObjToStr conversion error: " + ex.getMessage());
                         }
 
-                        ACLMessage reply = new ACLMessage(ACLMessage.INFORM);
+                        ACLMessage reply = new ACLMessage(ACLMessage.NOT_UNDERSTOOD);
 
                         reply.addReceiver(msg.getSender()); //get from envelope                       
 
                         reply.setContent(strObj);                        
                         send(reply);
 
-                        System.out.println("\n[CustomerAgentPlus] Sending Message!");
-                        System.out.println("[CustomerAgentPlus] Receiver Agent                 : " + msg.getSender());
-                        System.out.println("[CustomerAgentPlus] Message content [Base64 string]: " + msg.getContent());
+                        System.out.println("\n[CustomerAgent] Sending Message!");
+                        System.out.println("[CustomerAgent] Receiver Agent                 : " + msg.getSender());
+                        System.out.println("[CustomerAgent] Message content [Base64 string]: " + msg.getContent());                                  
+                    } 
+                    else if (cusReq.getAction().equals("Load Display")) {
+                        ClothList clothes = new ClothList();
+                        clothes.loadData(cusReq.getClothType());
+                        cusReq.setClothes(clothes);
+                        
+                        cusReq.setAction("Load clothes");
+                        String strObj = ""; 
+                        try
+                        {
+                            strObj = serializeObjectToString(cusReq);
+                        }
+                        catch (Exception ex)
+                        {
+                            System.out.println("\n[CalcAgentPlus] ObjToStr conversion error: " + ex.getMessage());
+                        }
+
+                        ACLMessage reply = new ACLMessage(ACLMessage.NOT_UNDERSTOOD);
+
+                        reply.addReceiver(msg.getSender()); //get from envelope                       
+
+                        reply.setContent(strObj);                        
+                        send(reply);
+
+                        System.out.println("\n[CustomerAgent] Sending Message!");
+                        System.out.println("[CustomerAgent] Receiver Agent                 : " + msg.getSender());
+                        System.out.println("[CustomerAgent] Message content [Base64 string]: " + msg.getContent());
                     }
-                    else if(action.equals("Remove Product from Carts")){
-                        
-                        action="Product has been remove from cart";
-                        String strObj = ""; 
-                        try
-                        {
-                            strObj = serializeObjectToString(action);
-                            //strObj = serializeObjectToString(request);
-                        }
-                        catch (Exception ex)
-                        {
-                            System.out.println("\n[CalcAgentPlus] ObjToStr conversion error: " + ex.getMessage());
-                        }
-
-                        ACLMessage reply = new ACLMessage(ACLMessage.NOT_UNDERSTOOD);
-
-                        reply.addReceiver(msg.getSender()); //get from envelope                       
-
-                        reply.setContent(strObj);                        
-                        send(reply);
-
-                        System.out.println("\n[CustomerAgentPlus] Sending Message!");
-                        System.out.println("[CustomerAgentPlus] Receiver Agent                 : " + msg.getSender());
-                        System.out.println("[CustomerAgentPlus] Message content [Base64 string]: " + msg.getContent());                                  
-                    } 
-                    else if(action.equals("Confirm")){
-                        
-                        action="Send Order to seller";
-                        String strObj = ""; 
-                        try
-                        {
-                            strObj = serializeObjectToString(action);
-                            //strObj = serializeObjectToString(request);
-                        }
-                        catch (Exception ex)
-                        {
-                            System.out.println("\n[CalcAgentPlus] ObjToStr conversion error: " + ex.getMessage());
-                        }
-
-                        ACLMessage reply = new ACLMessage(ACLMessage.NOT_UNDERSTOOD);
-
-                        reply.addReceiver(msg.getSender()); //get from envelope                       
-
-                        reply.setContent(strObj);                        
-                        send(reply);
-
-                        System.out.println("\n[CustomerAgentPlus] Sending Message!");
-                        System.out.println("[CustomerAgentPlus] Receiver Agent                 : " + msg.getSender());
-                        System.out.println("[CustomerAgentPlus] Message content [Base64 string]: " + msg.getContent());                                  
-                    } 
                     else{
                         
-                        action="Error";
+                        cusReq.setAction("Error");
                         String strObj = ""; 
                         try
                         {
-                            strObj = serializeObjectToString(action);
-                            //strObj = serializeObjectToString(request);
+                            strObj = serializeObjectToString(cusReq);
                         }
                         catch (Exception ex)
                         {
@@ -234,13 +278,13 @@ public class CustomerAgent extends Agent{
                         reply.setContent(strObj);                        
                         send(reply);
 
-                        System.out.println("\n[CustomerAgentPlus] Sending Message!");
-                        System.out.println("[CustomerAgentPlus] Receiver Agent                 : " + msg.getSender());
-                        System.out.println("[CustomerAgentPlus] Message content [Base64 string]: " + msg.getContent());                                  
+                        System.out.println("\n[CustomerAgent] Sending Message!");
+                        System.out.println("[CustomerAgent] Receiver Agent                 : " + msg.getSender());
+                        System.out.println("[CustomerAgent] Message content [Base64 string]: " + msg.getContent());                                  
                     } 
 		}
                 //setBaju();
-                System.out.println("[CustomerAgentPlus] CyclicBehaviour Block");
+                System.out.println("[CustomerAgent] CyclicBehaviour Block");
                 block();
             }
 	});

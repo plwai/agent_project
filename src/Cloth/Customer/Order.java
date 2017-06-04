@@ -5,16 +5,18 @@
  */
 package Cloth.Customer;
 
+import java.io.Serializable;
+
 /**
  *
  * @author on
  */
-public class orderList {
+public class Order implements Serializable {
     private int quantity;
     private Cloth baju;
-    public orderList(){
+    public Order(){
     }
-    public orderList(int q, Cloth b){
+    public Order(int q, Cloth b){
         this.quantity=q;
         this.baju=b;
     }

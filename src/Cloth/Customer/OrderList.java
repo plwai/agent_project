@@ -5,27 +5,28 @@
  */
 package Cloth.Customer;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  *
  * @author on
  */
-public class order {
-    ArrayList<orderList> ProductCart;
+public class OrderList implements Serializable {
+    ArrayList<Order> ProductCart;
     float   totalPrice; 
     
-    public order(){
+    public OrderList(){
         ProductCart = new ArrayList();
         totalPrice=0;
     }
-    public void addProduct(orderList product){
+    public void addProduct(Order product){
         this.ProductCart.add(product);
     }
-    public void setProductCart(ArrayList<orderList> product){
+    public void setProductCart(ArrayList<Order> product){
         this.ProductCart=product;
     }
-    public ArrayList<orderList> getProductList(){
+    public ArrayList<Order> getProductList(){
         return ProductCart;
     }
     public void setTotalPrice(float totalPrice){

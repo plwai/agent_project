@@ -132,18 +132,15 @@ public class Cart extends javax.swing.JFrame {
     private void CartTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_CartTableMouseClicked
         // TODO add your handling code here:
         int RemoveOrderId=CartTable.getSelectedRow();
-        Cloth c= new Cloth( "", "", "", "", 0);
         String action = "Remove Product from Carts";
-        orderList order = new orderList(0, c);
-        customerSender.ProductToCart(action, order, RemoveOrderId);
+        customerSender.ProductToCart(action, null, RemoveOrderId);
     }//GEN-LAST:event_CartTableMouseClicked
 
     private void ConfirmButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ConfirmButtonActionPerformed
         // TODO add your handling code here:
-        Cloth c= new Cloth( "", "", "", "", 0);
         String action = "Confirm";
-        orderList order = new orderList(0, c);
-        customerSender.ProductToCart(action, order, 0);
+       
+        customerSender.sendConfirmRequest(action);
     }//GEN-LAST:event_ConfirmButtonActionPerformed
 
     /**
@@ -188,7 +185,7 @@ public class Cart extends javax.swing.JFrame {
         ConfirmButton.setEnabled(false);
     }
             
-    public void setTable(order displayOrder) {
+    public void setTable(OrderList displayOrder) {
         int row=displayOrder.getProductList().size();
         DefaultTableModel model = (DefaultTableModel) CartTable.getModel();
         model.setRowCount(0);

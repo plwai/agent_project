@@ -91,15 +91,15 @@ public class Inventory implements Serializable{
     
     public void loadAllData() {
         try {  
-                Connection con=DriverManager.getConnection(  "jdbc:derby://localhost:1527/sample","app","app");
-                Statement stmt=con.createStatement(); 
-                ResultSet rs=stmt.executeQuery("select * from INVENTORY");  
+            Connection con=DriverManager.getConnection(  "jdbc:derby://localhost:1527/sample","app","app");
+            Statement stmt=con.createStatement(); 
+            ResultSet rs=stmt.executeQuery("select * from INVENTORY");  
+
+            while(rs.next()){  
+                itemSummary.add(new ItemProperties(rs.getString(2), rs.getString(3), rs.getString(5), rs.getString(4), rs.getInt(6), rs.getInt(1)));
+            }  
                 
-                while(rs.next()){  
-                    itemSummary.add(new ItemProperties(rs.getString(2), rs.getString(3), rs.getString(5), rs.getString(4), rs.getInt(6), rs.getInt(1)));
-                }  
-                
-                con.close();  
+            con.close();  
         } catch (SQLException ex) {
             Logger.getLogger(Inventory.class.getName()).log(Level.SEVERE, null, ex);
         }

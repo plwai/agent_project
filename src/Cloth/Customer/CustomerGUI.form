@@ -106,9 +106,9 @@
       <Properties>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
           <StringArray count="3">
-            <StringItem index="0" value="One-Piece"/>
-            <StringItem index="1" value="T-Shirt"/>
-            <StringItem index="2" value="Pant"/>
+            <StringItem index="0" value="shirt"/>
+            <StringItem index="1" value="pants"/>
+            <StringItem index="2" value="shoes"/>
           </StringArray>
         </Property>
         <Property name="enabled" type="boolean" value="false"/>

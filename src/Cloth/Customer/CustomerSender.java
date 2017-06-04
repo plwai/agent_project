@@ -1,6 +1,8 @@
 package Cloth.Customer;
 
 
+import Cloth.Seller.Inventory;
+import Cloth.Seller.ItemProperties;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.*;
@@ -16,10 +18,18 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 import org.apache.commons.codec.binary.Base64;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -41,23 +51,59 @@ public class CustomerSender extends Agent {
     private AID customerServiceAgentAID = null;
     private ArrayList<Cloth> Baju = new ArrayList();
     
-    private void setBaju(){
-        Cloth b = new Cloth("Jubah A","Blue","One-Piece","S", 20);
-        Baju.add(b);
-        b = new Cloth("Jubah A","Blue","One-Piece","XL", 20);
-        Baju.add(b);
-        Cloth a = new Cloth("Jubah B","Blue","One-Piece","S", 20);
-        Baju.add(a);
-        Cloth c = new Cloth("T--","Blue","T-Shirt","S", 21);
-        Baju.add(c);
+        //object to string
+    public String serializeObjectToString(Object object) throws IOException 
+    {
+        String s = null;
+        
+        try 
+        {
+            ByteArrayOutputStream arrayOutputStream = new ByteArrayOutputStream();
+            GZIPOutputStream gzipOutputStream = new GZIPOutputStream(arrayOutputStream);
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(gzipOutputStream);         
+        
+            objectOutputStream.writeObject(object);
+            objectOutputStream.flush();
+            gzipOutputStream.close();
+            
+            objectOutputStream.flush();
+            objectOutputStream.close();
+            
+            s = new String(base64.encode(arrayOutputStream.toByteArray()));
+            arrayOutputStream.flush();
+            arrayOutputStream.close();
+        }
+        catch(Exception ex){}
+        
+        return s;
     }
+    
+    //string to object
+    public Object deserializeObjectFromString(String objectString) throws IOException, ClassNotFoundException 
+    {
+        Object obj = null;
+        try
+        {    
+            ByteArrayInputStream arrayInputStream = new ByteArrayInputStream(base64.decode(objectString));
+            GZIPInputStream gzipInputStream = new GZIPInputStream(arrayInputStream);
+            ObjectInputStream objectInputStream = new ObjectInputStream(gzipInputStream);
+            obj =  objectInputStream.readObject();
+            
+            objectInputStream.close();
+            gzipInputStream.close();
+            arrayInputStream.close();
+        }
+        catch(Exception ex){}
+        return obj;
+    }
+    
     //not using agent
     private CustomerRequest sendtoagent(CustomerRequest request){
         if (request.getAction().equals("Add Product to Carts")) {
             //action
             customerGui.appendLog("add product");
-            order order = new order();
-            orderList newOrder = request.getNewOrder();
+            OrderList order = new OrderList();
+            Order newOrder = request.getNewOrder();
             order=request.getOrder();
             order.addProduct(newOrder);
             float totalPrice = order.getTotalPrice();
@@ -70,7 +116,7 @@ public class CustomerSender extends Agent {
         else if(request.getAction().equals("Remove Product from Carts")){
             //action
             customerGui.appendLog("remove product");
-            ArrayList<orderList> order = request.getOrder().getProductList();
+            ArrayList<Order> order = request.getOrder().getProductList();
             float minusPrice= order.get(request.getRemoveProduct()).getQuantity()*order.get(request.getRemoveProduct()).getBaju().getPrice();
             request.getOrder().setTotalPrice(request.getOrder().getTotalPrice()-minusPrice);
             order.remove(request.getRemoveProduct());
@@ -139,80 +185,9 @@ public class CustomerSender extends Agent {
         return BajuName;
     }
     
-    
-    //object to string
-    public String serializeObjectToString(Object object) throws IOException 
-    {
-        String s = null;
-        
-        try 
-        {
-            ByteArrayOutputStream arrayOutputStream = new ByteArrayOutputStream();
-            GZIPOutputStream gzipOutputStream = new GZIPOutputStream(arrayOutputStream);
-            ObjectOutputStream objectOutputStream = new ObjectOutputStream(gzipOutputStream);         
-        
-            objectOutputStream.writeObject(object);
-            objectOutputStream.flush();
-            gzipOutputStream.close();
-            
-            objectOutputStream.flush();
-            objectOutputStream.close();
-            
-            s = new String(base64.encode(arrayOutputStream.toByteArray()));
-            arrayOutputStream.flush();
-            arrayOutputStream.close();
-        }
-        catch(Exception ex){}
-        
-        return s;
-    }
-    
-    //string to object
-    public Object deserializeObjectFromString(String objectString) throws IOException, ClassNotFoundException 
-    {
-        Object obj = null;
-        try
-        {    
-            ByteArrayInputStream arrayInputStream = new ByteArrayInputStream(base64.decode(objectString));
-            GZIPInputStream gzipInputStream = new GZIPInputStream(arrayInputStream);
-            ObjectInputStream objectInputStream = new ObjectInputStream(gzipInputStream);
-            obj =  objectInputStream.readObject();
-            
-            objectInputStream.close();
-            gzipInputStream.close();
-            arrayInputStream.close();
-        }
-        catch(Exception ex){}
-        return obj;
-    }
-    
     public void requestCatalog(String clothType){
-        //ArrayList <Cloth> Baju = new ArrayList();
-        setBaju();
-        String[] BajuName = getBajuName(Baju, clothType);
-        customerGui.clearLog();
-        customerGui.appendLog("Receiving cloth catalog request from CustomerGUI");
-        customerGui.appendLog("Cloth Type : " + clothType);  
-        customerGui.appendLog("\n");
-        customerGui.displayCalatalog(BajuName);
-    }
-    
-    public void ProductToCart(String action, orderList newOrder, int removeProdcut){
-        customerGui.clearLog();
-        customerGui.appendLog("Request add product to cart data from gui");
-        customerGui.appendLog("Action: " + action);
-        customerGui.appendLog("RemoveProduct: " + removeProdcut);
-        customerGui.appendLog("Cloth Name: " + newOrder.getBaju().getName());
-        customerGui.appendLog("Cloth Size: " + newOrder.getBaju().getSize());
-        customerGui.appendLog("Cloth Color: " + newOrder.getBaju().getColor());
-        customerGui.appendLog("Cloth Price: RM " + newOrder.getBaju().getPrice());
-        customerGui.appendLog("Quantity: " + newOrder.getQuantity());
-        customerRequest.setRemoveProduct(removeProdcut);
-        customerRequest.setAction(action);
-        customerRequest.setNewOrder(newOrder);  
-        customerGui.appendLog("ok");
-        //Send messages to "cap - CustomerAgent"
-        
+        customerRequest.setAction("Load Display");
+        customerRequest.setClothType(clothType);
         
         customerGui.appendLog("Preparing ACL msg: INFORM");
         ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
@@ -222,34 +197,48 @@ public class CustomerSender extends Agent {
         String strObj = ""; 
         try
         {
-            strObj = serializeObjectToString(action);
+            strObj = serializeObjectToString(customerRequest);
         }
         catch (Exception ex)
         {
             System.out.println("\n[CalcSender] ObjToStr conversion error: " + ex.getMessage());
         }
-        
+        System.out.println(customerRequest.getAction());
 	msg.setContent(strObj);
         
-     	msg.addReceiver(new AID("cap", AID.ISLOCALNAME));
         msg.addReceiver(customerServiceAgentAID);
         send(msg);
         
-        customerGui.appendLog("Sending Message to cap");
+        customerGui.appendLog("Sending Message to " + customerServiceAgentAID);
         customerGui.appendLog("Message content [Base64 string]: " + strObj);
-        //customerRequest = request;
-        
-        
-        if(strObj!=null){
-            customerRequest=sendtoagent(customerRequest);
-            customerGui.clearLog();
-            customerGui.appendLog("Show back add product to cart data from gui");
-            customerGui.appendLog("Product list size : "+ customerRequest.getOrder().getProductList().size());
-            for(int i=0; i<customerRequest.getOrder().getProductList().size(); i++){
-                customerGui.appendLog(customerRequest.getOrder().getProductList().get(i).getBaju().getName()+"\t"+customerRequest.getOrder().getProductList().get(i).getQuantity());
-            }
-            cart.setTable(customerRequest.getOrder());
+    }
+    
+    public void ProductToCart(String action, Order newOrder, int removeProdcut){
+        customerGui.clearLog();
+        if(action.equals("Add Product to Carts")) {
+            customerGui.appendLog("Request add product to cart data from gui");
+            customerGui.appendLog("Action: " + action);
+            customerGui.appendLog("RemoveProduct: " + removeProdcut);
+            customerGui.appendLog("Cloth Name: " + newOrder.getBaju().getName());
+            customerGui.appendLog("Cloth Size: " + newOrder.getBaju().getSize());
+            customerGui.appendLog("Cloth Color: " + newOrder.getBaju().getColor());
+            customerGui.appendLog("Cloth Price: RM " + newOrder.getBaju().getPrice());
+            customerGui.appendLog("Quantity: " + newOrder.getQuantity());
+            customerRequest.setRemoveProduct(removeProdcut);
+            customerRequest.setAction(action);
+            customerRequest.setNewOrder(newOrder);  
+            customerGui.appendLog("ok");
         }
+        
+        customerRequest=sendtoagent(customerRequest);
+        customerGui.clearLog();
+        customerGui.appendLog("Show back add product to cart data from gui");
+        customerGui.appendLog("Product list size : "+ customerRequest.getOrder().getProductList().size());
+        for(int i=0; i<customerRequest.getOrder().getProductList().size(); i++){
+            customerGui.appendLog(customerRequest.getOrder().getProductList().get(i).getBaju().getName()+"\t"+customerRequest.getOrder().getProductList().get(i).getQuantity());
+        }
+        cart.setTable(customerRequest.getOrder());
+
         showCloth.closeGui();
         customerGui.appendLog("\n");
     }
@@ -285,10 +274,37 @@ public class CustomerSender extends Agent {
             String type=b.get(0).getType();
             String name=b.get(0).getName();
             showCloth = new ClothDiscription(this);
-            showCloth.setBajuData(type, name, price , size);
+            showCloth.setBajuData(type, name, price , size, b.get(0).getId());
             showCloth.showGui();
         }
         customerGui.clearLog();
+    }
+    
+    public void sendConfirmRequest(String action) {
+        customerRequest.setAction(action);
+        
+        customerGui.appendLog("Preparing ACL msg: INFORM");
+        ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
+        
+        
+        customerGui.appendLog("Convert CustomerRequest obj to String Base64");   
+        String strObj = ""; 
+        try
+        {
+            strObj = serializeObjectToString(customerRequest);
+        }
+        catch (Exception ex)
+        {
+            System.out.println("\n[CalcSender] ObjToStr conversion error: " + ex.getMessage());
+        }
+        
+	msg.setContent(strObj);
+        
+        msg.addReceiver(customerServiceAgentAID);
+        send(msg);
+        
+        customerGui.appendLog("Sending Message to " + customerServiceAgentAID);
+        customerGui.appendLog("Message content [Base64 string]: " + strObj);
     }
     
     public void getCustomerServiceAgent() {
@@ -301,8 +317,6 @@ public class CustomerSender extends Agent {
             
             ServiceDescription templateSd = new ServiceDescription();
             templateSd.setType(serviceType);
-            templateSd.addProperties(new Property("Action1", "Add Product to Carts"));
-            templateSd.addProperties(new Property("Action2", "Remove Product from Carts"));
             templateSd.addProperties(new Property("Action3", "Confirm"));
             template.addServices(templateSd);
   		
@@ -364,10 +378,18 @@ public class CustomerSender extends Agent {
                     
                     try
                     {
-//                        CustomerRequest request = (CustomerRequest)deserializeObjectFromString(msgContent);
-                        String result = (String)deserializeObjectFromString(msgContent);
-                        customerGui.appendLog(result);
-                        //customerGui.showResult(result);
+                        CustomerRequest result = (CustomerRequest)deserializeObjectFromString(msgContent);
+                        customerGui.appendLog(result.getAction());
+                        
+                        if(result.getClothes() != null) {
+                            Baju = result.getClothes().getBaju();
+                            String[] BajuName = getBajuName(Baju, result.getClothType());
+                            customerGui.clearLog();
+                            customerGui.appendLog("Receiving cloth catalog request from CustomerGUI");
+                            customerGui.appendLog("Cloth Type : " + result.getClothType());  
+                            customerGui.appendLog("\n");
+                            customerGui.displayCalatalog(BajuName);
+                        }
                         
                         if(result.equals("")){
                             cart.closeGui();

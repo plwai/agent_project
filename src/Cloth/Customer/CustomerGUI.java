@@ -4,6 +4,7 @@ package Cloth.Customer;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.util.ArrayList;
+import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -60,7 +61,7 @@ public class CustomerGUI extends javax.swing.JFrame {
 
         jLabel1.setText("Type: ");
 
-        type.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "One-Piece", "T-Shirt", "Pant" }));
+        type.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "shirt", "pants", "shoes" }));
         type.setEnabled(false);
         type.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

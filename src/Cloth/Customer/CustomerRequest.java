@@ -5,26 +5,47 @@
  */
 package Cloth.Customer;
 
+import java.io.Serializable;
+
 /**
  *
  * @author on
  */
-public class CustomerRequest {
+public class CustomerRequest implements Serializable {
     private String action;
-    private order order=new order();
-    private orderList product;
+    private OrderList order=new OrderList();
+    private Order product;
+    private ClothList clothes;
+    private String clothType;
     private boolean success = false;
     private int removeProduct=0;
     
     public CustomerRequest(){
         action=new String();
-        product=new orderList();
+        product=new Order();
     }
-    public CustomerRequest(String action, orderList NewOrder){
+    public CustomerRequest(String action, Order NewOrder){
         this.action=action;
         this.product=NewOrder;
     }
-    public void setOrder(order order){
+
+    public String getClothType() {
+        return clothType;
+    }
+
+    public void setClothType(String clothType) {
+        this.clothType = clothType;
+    }
+
+    public ClothList getClothes() {
+        return clothes;
+    }
+
+    public void setClothes(ClothList clothes) {
+        this.clothes = clothes;
+    }
+    
+    public void setOrder(OrderList order){
         this.order=order;
     }
     public void setRemoveProduct(int removeProduct){
@@ -36,16 +57,16 @@ public class CustomerRequest {
     public void setAction(String action){
         this.action=action;
     }
-    public void setNewOrder(orderList productList){
+    public void setNewOrder(Order productList){
         this.product=productList;
     }
     public String getAction(){
         return action;
     }
-    public order getOrder(){
+    public OrderList getOrder(){
         return order;
     }
-    public orderList getNewOrder(){
+    public Order getNewOrder(){
         return product;
     }
     public boolean isSuccess() {

@@ -86,40 +86,6 @@ public class SellerAgentInventory extends Agent
     {     
         String serviceName = "seller-agent";
         
-        // Initialize fake database
-        /*ItemProperties item = new ItemProperties();
-
-        item.setId(1);
-        item.setItemColor("Blue");
-        item.setItemName("The T-shirt");
-        item.setItemQuantity(50);
-        item.setItemSize("L");
-        item.setItemType("shirt");
-        
-        storeInventory.addItem(item);
-        
-        ItemProperties item2 = new ItemProperties();
-        
-        item2.setId(2);
-        item2.setItemColor("Red");
-        item2.setItemName("The T-shirt");
-        item2.setItemQuantity("5");
-        item2.setItemSize("L");
-        item2.setItemType("shirt");
-        
-        storeInventory.addItem(item2);
-        
-        ItemProperties item3 = new ItemProperties();
-        
-        item3.setId(3);
-        item3.setItemColor("Black");
-        item3.setItemName("The Pants");
-        item3.setItemQuantity("10");
-        item3.setItemSize("L");
-        item3.setItemType("pant");
-
-        storeInventory.addItem(item3);*/
-        
   	try {
             DFAgentDescription dfd = new DFAgentDescription();
             dfd.setName(getAID());
