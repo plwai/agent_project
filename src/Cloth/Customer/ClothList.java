@@ -69,7 +69,7 @@ public class ClothList implements Serializable{
             ResultSet rs=stmt.executeQuery("select * from INVENTORY");  
 
             while(rs.next()){  
-                Baju.add(new Cloth(rs.getString(2), rs.getString(4), rs.getString(3), rs.getString(5), rs.getInt(6), rs.getInt(1)));
+                Baju.add(new Cloth(rs.getString(2), rs.getString(4), rs.getString(3), rs.getString(5), rs.getInt(7), rs.getInt(1)));
             }  
 
             con.close();  

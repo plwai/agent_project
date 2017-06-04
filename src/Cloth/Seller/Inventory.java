@@ -50,8 +50,8 @@ public class Inventory implements Serializable{
         try {  
                 Connection con=DriverManager.getConnection(  "jdbc:derby://localhost:1527/sample","app","app");
                 
-                String query = " insert into INVENTORY (ID, NAME, TYPE, COLOR, SIZE, QUANTITY)"
-                + " values (?, ?, ?, ?, ?, ?)";
+                String query = " insert into INVENTORY (ID, NAME, TYPE, COLOR, SIZE, QUANTITY, PRICE)"
+                + " values (?, ?, ?, ?, ?, ?, ?)";
 
                 PreparedStatement preparedStmt = con.prepareStatement(query);
                 preparedStmt.setInt (1, item.getId());
@@ -60,6 +60,7 @@ public class Inventory implements Serializable{
                 preparedStmt.setString (4, item.getItemColor());
                 preparedStmt.setString (5, item.getItemSize());
                 preparedStmt.setInt    (6, item.getItemQuantity());
+                preparedStmt.setFloat    (7, item.getItemPrice());
 
                 preparedStmt.execute();
                 
@@ -96,7 +97,7 @@ public class Inventory implements Serializable{
             ResultSet rs=stmt.executeQuery("select * from INVENTORY");  
 
             while(rs.next()){  
-                itemSummary.add(new ItemProperties(rs.getString(2), rs.getString(3), rs.getString(5), rs.getString(4), rs.getInt(6), rs.getInt(1)));
+                itemSummary.add(new ItemProperties(rs.getString(2), rs.getString(3), rs.getString(5), rs.getString(4), rs.getInt(6), rs.getInt(1), rs.getInt(7)));
             }  
                 
             con.close();  

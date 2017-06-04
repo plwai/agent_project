@@ -18,6 +18,7 @@ public class ItemProperties implements Serializable{
     private String itemType;
     private String itemSize;
     private String itemColor;
+    private float itemPrice;
     private int itemQuantity;
     private String itemSells;
     private int id;
@@ -31,12 +32,13 @@ public class ItemProperties implements Serializable{
         itemSells = "";
     }
 
-    public ItemProperties(String itemName, String itemType, String itemSize, String itemColor, int itemQuantity, int id) {
+    public ItemProperties(String itemName, String itemType, String itemSize, String itemColor, int itemQuantity, int id, float itemPrice) {
         this.itemName = itemName;
         this.itemType = itemType;
         this.itemSize = itemSize;
         this.itemColor = itemColor;
         this.itemQuantity = itemQuantity;
+        this.itemPrice = itemPrice;
         this.id = id;
     }
 
@@ -46,6 +48,14 @@ public class ItemProperties implements Serializable{
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public float getItemPrice() {
+        return itemPrice;
+    }
+
+    public void setItemPrice(float itemPrice) {
+        this.itemPrice = itemPrice;
     }
     
     public String getItemName() {

@@ -223,12 +223,14 @@ public class CustomerSender extends Agent {
             customerGui.appendLog("Cloth Size: " + newOrder.getBaju().getSize());
             customerGui.appendLog("Cloth Color: " + newOrder.getBaju().getColor());
             customerGui.appendLog("Cloth Price: RM " + newOrder.getBaju().getPrice());
-            customerGui.appendLog("Quantity: " + newOrder.getQuantity());
-            customerRequest.setRemoveProduct(removeProdcut);
-            customerRequest.setAction(action);
+            customerGui.appendLog("Quantity: " + newOrder.getQuantity());   
             customerRequest.setNewOrder(newOrder);  
             customerGui.appendLog("ok");
         }
+        else if(action.equals("Remove Product from Carts")) {
+            customerRequest.setRemoveProduct(removeProdcut);
+        }
+        customerRequest.setAction(action);
         
         customerRequest=sendtoagent(customerRequest);
         customerGui.clearLog();
@@ -244,7 +246,7 @@ public class CustomerSender extends Agent {
     }
     
     public void ViewClothDescription(String BajuName){
-        float price=(float) 20.00;
+        
         ArrayList<Cloth> b = new ArrayList();
         ArrayList<String> size = new ArrayList();
         Cloth[] baju = Baju.toArray(new Cloth[0]);
@@ -273,6 +275,7 @@ public class CustomerSender extends Agent {
         if(b.size()>0){
             String type=b.get(0).getType();
             String name=b.get(0).getName();
+            float price= b.get(0).getPrice();
             showCloth = new ClothDiscription(this);
             showCloth.setBajuData(type, name, price , size, b.get(0).getId());
             showCloth.showGui();
