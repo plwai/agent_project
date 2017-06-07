@@ -1,8 +1,8 @@
 package Cloth.Customer;
 
 
-import Cloth.Seller.Inventory;
-import Cloth.Seller.ItemProperties;
+import Cloth.Inventory.Inventory;
+import Cloth.Inventory.ItemProperties;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.*;
@@ -189,8 +189,8 @@ public class CustomerSender extends Agent {
         customerRequest.setAction("Load Display");
         customerRequest.setClothType(clothType);
         
-        customerGui.appendLog("Preparing ACL msg: INFORM");
-        ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
+        customerGui.appendLog("Preparing ACL msg: REQUEST");
+        ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
         
         
         customerGui.appendLog("Convert CustomerRequest obj to String Base64");   
@@ -286,8 +286,8 @@ public class CustomerSender extends Agent {
     public void sendConfirmRequest(String action) {
         customerRequest.setAction(action);
         
-        customerGui.appendLog("Preparing ACL msg: INFORM");
-        ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
+        customerGui.appendLog("Preparing ACL msg: REQUEST");
+        ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
         
         
         customerGui.appendLog("Convert CustomerRequest obj to String Base64");   

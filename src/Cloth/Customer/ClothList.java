@@ -5,7 +5,7 @@
  */
 package Cloth.Customer;
 
-import Cloth.Seller.Inventory;
+import Cloth.Inventory.Inventory;
 import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -37,6 +37,10 @@ public class ClothList implements Serializable{
 
     public void setBaju(ArrayList<Cloth> Baju) {
         this.Baju = Baju;
+    }
+    
+    public void addBaju(Cloth baju){
+        this.Baju.add(baju);
     }
     
     public void loadData() {

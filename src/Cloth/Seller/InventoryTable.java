@@ -5,6 +5,7 @@
  */
 package Cloth.Seller;
 
+import Cloth.Inventory.ItemProperties;
 import java.awt.Container;
 import java.awt.FlowLayout;
 import java.util.Vector;

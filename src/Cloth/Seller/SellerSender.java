@@ -5,6 +5,8 @@
  */
 package Cloth.Seller;
 
+import Cloth.Inventory.Request;
+import Cloth.Inventory.CustomerRequests;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.*;
@@ -209,12 +211,12 @@ public class SellerSender extends Agent{
     
     public void requestService(SellerStore storeObj) {
         sellerGui.clearLog();
-        sellerGui.appendLog("Receiving request and Store object from CalcGUI");
+        sellerGui.appendLog("Receiving request and Store object from SellerGUI");
         sellerGui.appendLog("Store object - Service: " + storeObj.getServiceType());   
         sellerGui.appendLog("\n");
         
-        sellerGui.appendLog("Preparing ACL msg: INFORM");   
-	ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
+        sellerGui.appendLog("Preparing ACL msg: REQUEST");   
+	ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
         
         sellerGui.appendLog("Convert Store obj to String Base64");   
         String strObj = ""; 

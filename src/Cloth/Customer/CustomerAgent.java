@@ -1,12 +1,15 @@
 package Cloth.Customer;
 
-import Cloth.Seller.Inventory;
-import Cloth.Seller.ItemProperties;
+import Cloth.Inventory.DBRequest;
+import Cloth.Inventory.Inventory;
+import Cloth.Inventory.ItemProperties;
+import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.Property;
+import jade.domain.FIPAAgentManagement.SearchConstraints;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAException;
 import jade.lang.acl.ACLMessage;
@@ -22,6 +25,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
@@ -44,6 +51,8 @@ public class CustomerAgent extends Agent{
     private Cloth baju;
     private Order list;
     private CustomerRequest customerReq=new CustomerRequest();
+    private Map<String, AID> AIDMap = new HashMap<String, AID>();
+    private List<String> serviceList = new ArrayList<String>();
     
 //    private void setBaju(){
 //        Cloth b = new Cloth("Jubah A","Blue","One-Piece","s");
@@ -119,6 +128,9 @@ public class CustomerAgent extends Agent{
   	catch (FIPAException fe) {
             fe.printStackTrace();
   	}
+        
+        getServiceAgent();
+        
 	//First set-up answering behaviour	
 	addBehaviour(new CyclicBehaviour(this) 
 	{
@@ -126,6 +138,7 @@ public class CustomerAgent extends Agent{
                 ACLMessage msg = receive();
                 CustomerRequest cusReq= new CustomerRequest();
                 String action;
+                DBRequest dbReq = new DBRequest();
                 
 		if (msg != null) 
                 {   
@@ -135,153 +148,160 @@ public class CustomerAgent extends Agent{
                     System.out.println("[CustomerAgent] Sender Agent   : " + msg.getSender());
                     System.out.println("[CustomerAgent] Message content [Base64 string]: " + msgContent);                    
                     
-                    try
-                    {
-                        cusReq = (CustomerRequest)deserializeObjectFromString(msgContent);
+                    if(msg.getPerformative() == ACLMessage.INFORM){
+                        try
+                        {
+                            dbReq = (DBRequest)deserializeObjectFromString(msgContent);
+                        }
+                        catch(Exception ex)
+                        {
+                            System.out.println("\n[CustomerAgent] StrToObj conversion error: " + ex.getMessage());
+                        }
+                        
+                        if(dbReq.getRequest().equals("insert request")) {
+                            cusReq.setAction("Send Order to seller");
+                            String strObj = ""; 
+                            try
+                            {
+                                strObj = serializeObjectToString(cusReq);
+                            }
+                            catch (Exception ex)
+                            {
+                                System.out.println("\n[CalcAgentPlus] ObjToStr conversion error: " + ex.getMessage());
+                            }
+
+                            ACLMessage reply = new ACLMessage(ACLMessage.INFORM);
+
+                            reply.addReceiver((AID)msg.getAllReplyTo().next()); //get from envelope                       
+
+                            reply.setContent(strObj);                        
+                            send(reply);
+
+                            System.out.println("\n[CustomerAgent] Sending Message!");
+                            System.out.println("[CustomerAgent] Receiver Agent                 : " + msg.getSender());
+                            System.out.println("[CustomerAgent] Message content [Base64 string]: " + msg.getContent());
+                        }
+                        else if(dbReq.getRequest().equals("get all product")){
+                            ClothList clothes = new ClothList();
+                            cusReq = dbReq.getCusReq();
+                            
+                            for(ItemProperties item: dbReq.getInventory().getItemSummary()){
+                                clothes.addBaju(new Cloth(item.getItemName(), item.getItemColor(), item.getItemType(), item.getItemSize(), item.getItemPrice(), item.getId()));
+                            }
+                            cusReq.setClothes(clothes);
+                            cusReq.setAction("Load clothes");
+                            
+                            String strObj = ""; 
+                            try
+                            {
+                                strObj = serializeObjectToString(cusReq);
+                            }
+                            catch (Exception ex)
+                            {
+                                System.out.println("\n[CalcAgentPlus] ObjToStr conversion error: " + ex.getMessage());
+                            }
+
+                            ACLMessage reply = new ACLMessage(ACLMessage.INFORM);
+
+                            reply.addReceiver((AID)msg.getAllReplyTo().next()); //get from envelope                       
+
+                            reply.setContent(strObj);                        
+                            send(reply);
+
+                            System.out.println("\n[CustomerAgent] Sending Message!");
+                            System.out.println("[CustomerAgent] Receiver Agent                 : " + msg.getSender());
+                            System.out.println("[CustomerAgent] Message content [Base64 string]: " + msg.getContent());
+                        }
+                    
                     }
-                    catch(Exception ex)
-                    {
-                        System.out.println("\n[CustomerAgent] StrToObj conversion error: " + ex.getMessage());
+                    else {
+                        try
+                        {
+                            cusReq = (CustomerRequest)deserializeObjectFromString(msgContent);
+                        }
+                        catch(Exception ex)
+                        {
+                            System.out.println("\n[CustomerAgent] StrToObj conversion error: " + ex.getMessage());
+                        }
+
+                        if(cusReq.getAction().equals("Confirm")){
+                            dbReq.setRequest("insert request");
+                            dbReq.addReq(cusReq);
+                            
+                            String strObj = ""; 
+                            try
+                            {
+                                strObj = serializeObjectToString(dbReq);
+                            }
+                            catch (Exception ex)
+                            {
+                                System.out.println("\n[CustomerAgent] ObjToStr conversion error: " + ex.getMessage());
+                            }
+
+                            ACLMessage requestMsg = new ACLMessage(ACLMessage.REQUEST);
+
+                            requestMsg.addReceiver(AIDMap.get(dbReq.getRequest()));
+                            requestMsg.setContent(strObj);
+                            requestMsg.addReplyTo(msg.getSender());
+
+                            send(requestMsg);
+
+                            System.out.println("\n[CustomerAgent] Sending Message!asdsadas");
+                            System.out.println("[CustomerAgent] Receiver Agent                 : " + msg.getSender());
+                            System.out.println("[CustomerAgent] Message content [Base64 string]: " + msg.getContent());
+                        } 
+                        else if (cusReq.getAction().equals("Load Display")) {   
+                            dbReq.setRequest("get all product");
+                            dbReq.addReq(cusReq);
+                            
+                            String strObj = ""; 
+                            try
+                            {
+                                strObj = serializeObjectToString(dbReq);
+                            }
+                            catch (Exception ex)
+                            {
+                                System.out.println("\n[CalcAgentPlus] ObjToStr conversion error: " + ex.getMessage());
+                            }
+
+                            ACLMessage requestMsg = new ACLMessage(ACLMessage.REQUEST);
+
+                            requestMsg.addReceiver(AIDMap.get(dbReq.getRequest()));
+                            requestMsg.setContent(strObj);
+                            requestMsg.addReplyTo(msg.getSender());
+
+                            send(requestMsg);
+
+                            System.out.println("\n[CustomerAgent] Sending Message!");
+                            System.out.println("[CustomerAgent] Receiver Agent                 : " + msg.getSender());
+                            System.out.println("[CustomerAgent] Message content [Base64 string]: " + msg.getContent());
+                        }
+                        else{
+
+                            cusReq.setAction("Error");
+                            String strObj = ""; 
+                            try
+                            {
+                                strObj = serializeObjectToString(cusReq);
+                            }
+                            catch (Exception ex)
+                            {
+                                System.out.println("\n[CalcAgentPlus] ObjToStr conversion error: " + ex.getMessage());
+                            }
+
+                            ACLMessage reply = new ACLMessage(ACLMessage.NOT_UNDERSTOOD);
+
+                            reply.addReceiver(msg.getSender()); //get from envelope                       
+
+                            reply.setContent(strObj);                        
+                            send(reply);
+
+                            System.out.println("\n[CustomerAgent] Sending Message!");
+                            System.out.println("[CustomerAgent] Receiver Agent                 : " + msg.getSender());
+                            System.out.println("[CustomerAgent] Message content [Base64 string]: " + msg.getContent());                                  
+                        } 
                     }
                     
-                    if(cusReq.getAction().equals("Confirm")){
-                        OrderList orders = cusReq.getOrder();
-                        Connection con;
-                        int receiptId, orderId;
-                        
-                        try {
-                            con = DriverManager.getConnection(  "jdbc:derby://localhost:1527/sample","app","app");
-                            
-                            Statement stmt=con.createStatement(); 
-                            ResultSet rs=stmt.executeQuery("SELECT * FROM RECEIPT ORDER BY ID DESC");  
-
-                            if(rs.next()){
-                                receiptId = rs.getInt(1) + 1;
-                            }
-                            else {
-                                receiptId = 1;
-                            }
-                            
-                            stmt=con.createStatement(); 
-                            rs=stmt.executeQuery("SELECT * FROM ORDERS ORDER BY ID DESC");  
-
-                            if(rs.next()){
-                                orderId = rs.getInt(1) + 1;
-                            }
-                            else {
-                                orderId = 1;
-                            }
-                            
-                            System.out.println(orderId);
-                            
-                            String query = " insert into RECEIPT (id)"
-                                    + " values (?)";
-                                    
-                            PreparedStatement preparedStmt = con.prepareStatement(query);
-                            preparedStmt.setInt (1, receiptId);
-
-                            preparedStmt.execute();
-                            
-                            for(Order order: orders.getProductList()) {
-                                try {  
-                                    Cloth cloth = order.getBaju();
-
-                                    query = " insert into ORDERS (id, ProductId, Quantity, ReceiptID)"
-                                    + " values (?, ?, ?, ?)";
-
-                                    preparedStmt = con.prepareStatement(query);
-                                    preparedStmt.setInt (1, orderId);
-                                    preparedStmt.setInt (2, cloth.getId());
-                                    preparedStmt.setInt (3, order.getQuantity());
-                                    preparedStmt.setInt (4, receiptId);
-
-                                    preparedStmt.execute();
-
-                                    orderId++;
-                                } catch (SQLException ex) {
-                                    Logger.getLogger(Inventory.class.getName()).log(Level.SEVERE, null, ex);
-                                }
-                            }
-
-                            con.close();
-                            
-                        } catch (SQLException ex) {
-                            Logger.getLogger(CustomerAgent.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-
-                        cusReq.setAction("Send Order to seller");
-                        String strObj = ""; 
-                        try
-                        {
-                            strObj = serializeObjectToString(cusReq);
-                        }
-                        catch (Exception ex)
-                        {
-                            System.out.println("\n[CalcAgentPlus] ObjToStr conversion error: " + ex.getMessage());
-                        }
-
-                        ACLMessage reply = new ACLMessage(ACLMessage.NOT_UNDERSTOOD);
-
-                        reply.addReceiver(msg.getSender()); //get from envelope                       
-
-                        reply.setContent(strObj);                        
-                        send(reply);
-
-                        System.out.println("\n[CustomerAgent] Sending Message!");
-                        System.out.println("[CustomerAgent] Receiver Agent                 : " + msg.getSender());
-                        System.out.println("[CustomerAgent] Message content [Base64 string]: " + msg.getContent());                                  
-                    } 
-                    else if (cusReq.getAction().equals("Load Display")) {
-                        ClothList clothes = new ClothList();
-                        clothes.loadData(cusReq.getClothType());
-                        cusReq.setClothes(clothes);
-                        
-                        cusReq.setAction("Load clothes");
-                        String strObj = ""; 
-                        try
-                        {
-                            strObj = serializeObjectToString(cusReq);
-                        }
-                        catch (Exception ex)
-                        {
-                            System.out.println("\n[CalcAgentPlus] ObjToStr conversion error: " + ex.getMessage());
-                        }
-
-                        ACLMessage reply = new ACLMessage(ACLMessage.NOT_UNDERSTOOD);
-
-                        reply.addReceiver(msg.getSender()); //get from envelope                       
-
-                        reply.setContent(strObj);                        
-                        send(reply);
-
-                        System.out.println("\n[CustomerAgent] Sending Message!");
-                        System.out.println("[CustomerAgent] Receiver Agent                 : " + msg.getSender());
-                        System.out.println("[CustomerAgent] Message content [Base64 string]: " + msg.getContent());
-                    }
-                    else{
-                        
-                        cusReq.setAction("Error");
-                        String strObj = ""; 
-                        try
-                        {
-                            strObj = serializeObjectToString(cusReq);
-                        }
-                        catch (Exception ex)
-                        {
-                            System.out.println("\n[CalcAgentPlus] ObjToStr conversion error: " + ex.getMessage());
-                        }
-
-                        ACLMessage reply = new ACLMessage(ACLMessage.NOT_UNDERSTOOD);
-
-                        reply.addReceiver(msg.getSender()); //get from envelope                       
-
-                        reply.setContent(strObj);                        
-                        send(reply);
-
-                        System.out.println("\n[CustomerAgent] Sending Message!");
-                        System.out.println("[CustomerAgent] Receiver Agent                 : " + msg.getSender());
-                        System.out.println("[CustomerAgent] Message content [Base64 string]: " + msg.getContent());                                  
-                    } 
 		}
                 //setBaju();
                 System.out.println("[CustomerAgent] CyclicBehaviour Block");
@@ -289,5 +309,97 @@ public class CustomerAgent extends Agent{
             }
 	});
     }
-    
+    public void getServiceAgent() {
+  	try {
+            String service = null;
+            String serviceType = "basic-inventory";
+            System.out.println("Searching the DF/Yellow-Pages for " + serviceType + " service");
+            AIDMap.clear();
+            serviceList.clear();
+            
+            // Build the description used as template for the search
+            DFAgentDescription template = new DFAgentDescription();
+            
+            ServiceDescription templateSd = new ServiceDescription();
+            templateSd.setType(serviceType);
+            template.addServices(templateSd);
+  		
+            SearchConstraints sc = new SearchConstraints();
+            // We want to receive 10 results at most
+            sc.setMaxResults(new Long(10));
+  		
+            DFAgentDescription[] results = DFService.search(this, template, sc);
+            if (results.length > 0) {
+  		System.out.println("Agent "+getLocalName()+" found the following " + serviceType + " services:");
+                
+  		for (int i = 0; i < results.length; ++i) {
+                    DFAgentDescription dfd = results[i];
+                    AID agentAID = dfd.getName();
+                    for(Iterator it = dfd.getAllServices(); it.hasNext();) {
+                        ServiceDescription serviceDesc = (ServiceDescription)it.next();
+                        
+                        for(Iterator it2 = serviceDesc.getAllProperties();it2.hasNext();) {
+                            Property p = (Property)(it2.next());
+                            service = p.getValue().toString();
+
+                            AIDMap.put(service, dfd.getName());
+
+                            serviceList.add(service);
+                        }
+                    }
+  		}
+            }	
+            else {
+                System.out.println("No Service Found");
+            }
+  	}
+  	catch (FIPAException fe) {
+            fe.printStackTrace();
+  	}    
+        
+        try {
+            String service = null;
+            String serviceType = "basic-request";
+            System.out.println("Searching the DF/Yellow-Pages for " + serviceType + " service");
+            
+            // Build the description used as template for the search
+            DFAgentDescription template = new DFAgentDescription();
+            
+            ServiceDescription templateSd = new ServiceDescription();
+            templateSd.setType(serviceType);
+            template.addServices(templateSd);
+  		
+            SearchConstraints sc = new SearchConstraints();
+            // We want to receive 10 results at most
+            sc.setMaxResults(new Long(10));
+  		
+            DFAgentDescription[] results = DFService.search(this, template, sc);
+            if (results.length > 0) {
+  		System.out.println("Agent "+getLocalName()+" found the following " + serviceType + " services:");
+                
+  		for (int i = 0; i < results.length; ++i) {
+                    DFAgentDescription dfd = results[i];
+                    AID agentAID = dfd.getName();
+                    for(Iterator it = dfd.getAllServices(); it.hasNext();) {
+                        ServiceDescription serviceDesc = (ServiceDescription)it.next();
+                        
+                        for(Iterator it2 = serviceDesc.getAllProperties();it2.hasNext();) {
+                            Property p = (Property)(it2.next());
+                            service = p.getValue().toString();
+
+                            AIDMap.put(service, dfd.getName());
+
+                            serviceList.add(service);
+                        }
+                    }
+  		}
+            }	
+            else {
+                System.out.println("No Service Found");
+            }
+  	}
+  	catch (FIPAException fe) {
+            fe.printStackTrace();
+  	}   
+    }
 }

@@ -5,6 +5,9 @@
  */
 package Cloth.Seller;
 
+import Cloth.Inventory.CustomerRequests;
+import Cloth.Inventory.ItemProperties;
+import Cloth.Inventory.Inventory;
 import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -27,14 +30,6 @@ public class SellerStore implements Serializable {
     private String serviceType, info;
     private List<CustomerRequests> cusRequestList = new ArrayList<CustomerRequests>();
     private boolean isSuccess;
-
-    public SellerStore() {
-        try {  
-            Class.forName("org.apache.derby.jdbc.ClientDriver");
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(Inventory.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
 
     public Inventory getSummary() {
         return summary;
@@ -98,21 +93,5 @@ public class SellerStore implements Serializable {
 
     public void setRequestList(List<CustomerRequests> cusRequestList) {
         this.cusRequestList = cusRequestList;
-    }
-    
-    public void loadCusReq() {
-        try {  
-            Connection con=DriverManager.getConnection(  "jdbc:derby://localhost:1527/sample","app","app");
-            Statement stmt=con.createStatement(); 
-            ResultSet rs=stmt.executeQuery("select * from RECEIPT");  
-
-            while(rs.next()){  
-                cusRequestList.add(new CustomerRequests(rs.getInt(1)));
-            }  
-                
-            con.close();  
-        } catch (SQLException ex) {
-            Logger.getLogger(Inventory.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
 }

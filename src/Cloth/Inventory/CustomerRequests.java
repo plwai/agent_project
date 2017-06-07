@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Cloth.Seller;
+package Cloth.Inventory;
 
+import Cloth.Inventory.Inventory;
 import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -27,32 +28,10 @@ public class CustomerRequests implements Serializable{
 
     public CustomerRequests(int receiptId) {
         this.receiptId = receiptId;
-        
-        try {  
-            Class.forName("org.apache.derby.jdbc.ClientDriver");
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(Inventory.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        this.loadRequests();
     }
     
-    public void loadRequests() {
-        try {  
-            Connection con=DriverManager.getConnection(  "jdbc:derby://localhost:1527/sample","app","app");
-
-            Statement stmt=con.createStatement(); 
-            ResultSet rs=stmt.executeQuery("select * from ORDERS WHERE RECEIPTID="+Integer.toString(this.receiptId));  
-
-
-            while(rs.next()){  
-                requestList.add(new Request(rs.getInt(2), rs.getInt(3)));
-            }  
-                
-            con.close();  
-        } catch (SQLException ex) {
-            Logger.getLogger(Inventory.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    public void addRequest(Request req){
+        requestList.add(req);
     }
 
     public int getReceiptId() {
@@ -70,6 +49,4 @@ public class CustomerRequests implements Serializable{
     public void setRequestList(List<Request> requestList) {
         this.requestList = requestList;
     }
-    
-    
 }

@@ -5,6 +5,10 @@
  */
 package Cloth.Seller;
 
+import Cloth.Inventory.Request;
+import Cloth.Inventory.CustomerRequests;
+import Cloth.Inventory.ItemProperties;
+import Cloth.Inventory.Inventory;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.util.List;
