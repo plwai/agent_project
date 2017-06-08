@@ -394,7 +394,7 @@ public class CustomerSender extends Agent {
                             customerGui.displayCalatalog(BajuName);
                         }
                         
-                        if(result.equals("")){
+                        if(result.getAction().equals("Send Order to seller")){
                             cart.closeGui();
                         }
 //                        order order;

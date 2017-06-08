@@ -51,6 +51,7 @@ public class ClothDiscription extends javax.swing.JFrame {
         pricee = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         sizee = new javax.swing.JComboBox();
+        jLabel7 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -101,6 +102,8 @@ public class ClothDiscription extends javax.swing.JFrame {
             }
         });
 
+        jLabel7.setText("RM");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -121,12 +124,15 @@ public class ClothDiscription extends javax.swing.JFrame {
                             .addComponent(jLabel4))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(colorr, 0, 97, Short.MAX_VALUE)
+                            .addComponent(colorr, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(quantityy)
                             .addComponent(typee, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(namee, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(pricee, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(sizee, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(sizee, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(jLabel7)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(pricee, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -143,7 +149,8 @@ public class ClothDiscription extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(pricee)
-                    .addComponent(jLabel3))
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel7))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
@@ -185,7 +192,7 @@ public class ClothDiscription extends javax.swing.JFrame {
         String name=namee.getText();
         String action="Add Product to Carts";
         //float price=(float)pricee.getText();
-        float price=(float)20.00;
+        float price=Float.parseFloat(pricee.getText());
         String size=(String)sizee.getSelectedItem();
         String color=(String)colorr.getSelectedItem();
         int quantity = (int)quantityy.getValue();
@@ -210,7 +217,7 @@ public class ClothDiscription extends javax.swing.JFrame {
         
         namee.setText(name);
         typee.setText(type);
-        pricee.setText("RM "+price);        
+        pricee.setText(Float.toString(price));        
         this.id = id;
     }
     public void showGui() {
@@ -271,6 +278,7 @@ public class ClothDiscription extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel namee;
     private javax.swing.JLabel pricee;
     private javax.swing.JSpinner quantityy;

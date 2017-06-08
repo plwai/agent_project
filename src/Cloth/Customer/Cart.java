@@ -203,6 +203,7 @@ public class Cart extends javax.swing.JFrame {
     public void closeGui() {
         this.dispose();
     }
+    
     public void showGui() {
 	pack();
 	Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();

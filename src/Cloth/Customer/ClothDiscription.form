@@ -41,12 +41,16 @@
                       </Group>
                       <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="colorr" pref="97" max="32767" attributes="0"/>
+                          <Component id="colorr" max="32767" attributes="0"/>
                           <Component id="quantityy" max="32767" attributes="0"/>
                           <Component id="typee" max="32767" attributes="0"/>
                           <Component id="namee" max="32767" attributes="0"/>
-                          <Component id="pricee" max="32767" attributes="0"/>
                           <Component id="sizee" alignment="0" max="32767" attributes="0"/>
+                          <Group type="102" alignment="1" attributes="0">
+                              <Component id="jLabel7" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
+                              <Component id="pricee" min="-2" pref="78" max="-2" attributes="0"/>
+                          </Group>
                       </Group>
                   </Group>
               </Group>
@@ -71,6 +75,7 @@
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="pricee" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jLabel7" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
@@ -190,6 +195,11 @@
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="sizeeActionPerformed"/>
       </Events>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabel7">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="RM"/>
+      </Properties>
     </Component>
   </SubComponents>
 </Form>
