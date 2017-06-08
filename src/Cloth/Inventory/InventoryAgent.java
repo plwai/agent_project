@@ -9,6 +9,9 @@ package Cloth.Inventory;
  *
  * @author Wai Pai Lee
  */
+import Cloth.Customer.Cloth;
+import Cloth.Customer.Order;
+import Cloth.Customer.OrderList;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.*;
@@ -103,6 +106,7 @@ public class InventoryAgent extends Agent
             sd.addProperties(new Property("service", "get all product"));
             sd.addProperties(new Property("service", "update product quantity"));
             sd.addProperties(new Property("service", "insert product"));
+            sd.addProperties(new Property("service", "buy product"));
             dfd.addServices(sd);
   		
             DFService.register(this, dfd);
@@ -294,6 +298,53 @@ public class InventoryAgent extends Agent
 
                         reply.addReceiver(msg.getSender()); //get from envelope                       
                         reply.addReplyTo((AID)msg.getAllReplyTo().next());
+                        reply.setContent(strObj);                        
+                        send(reply);
+
+                        System.out.println("\n[InventoryAgent] Sending Message!");
+                        System.out.println("[InventoryAgent] Receiver Agent                 : " + msg.getSender());
+                        System.out.println("[InventoryAgent] Message content [Base64 string]: " + msg.getContent());
+                    }
+                    else if(req.getRequest().equals("buy product")) {
+                        OrderList orders = req.getCusReq().getOrder();
+                        
+                        for(Order order: orders.getProductList()) {
+                            Cloth cloth = order.getBaju();
+                            try {  
+                                con = DriverManager.getConnection(  "jdbc:derby://localhost:1527/sample","app","app");
+                                String query = " update INVENTORY set QUANTITY = QUANTITY - ? where id = ?";
+
+                                PreparedStatement preparedStmt = con.prepareStatement(query);
+
+                                preparedStmt.setInt (1, order.getQuantity());
+                                preparedStmt.setInt (2, cloth.getId());
+
+                                preparedStmt.executeUpdate();
+
+                                con.close();  
+                            } catch (SQLException ex) {
+                                Logger.getLogger(InventoryAgent.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        }
+                        
+                        String strObj = ""; 
+                        try
+                        {
+                            strObj = serializeObjectToString(req);
+                        }
+                        catch (Exception ex)
+                        {
+                            System.out.println("\n[InventoryAgent] ObjToStr conversion error: " + ex.getMessage());
+                        }
+
+                        ACLMessage reply = new ACLMessage(ACLMessage.INFORM);
+
+                        reply.addReceiver(msg.getSender()); //get from envelope   
+                        
+                        Iterator it = msg.getAllReplyTo(); 
+
+                        reply.addReplyTo((AID)it.next());
+                        reply.addReplyTo((AID)it.next());
                         reply.setContent(strObj);                        
                         send(reply);
 

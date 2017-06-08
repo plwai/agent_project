@@ -15,6 +15,7 @@ import jade.core.behaviours.CyclicBehaviour;
 import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.Property;
+import jade.domain.FIPAAgentManagement.SearchConstraints;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAException;
 import jade.lang.acl.ACLMessage;
@@ -29,7 +30,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -44,6 +48,7 @@ import org.apache.commons.codec.binary.Base64;
 public class RequestAgent extends Agent{
     static final Base64 base64 = new Base64();
     private Map<String, AID> AIDMap = new HashMap<String, AID>();
+    private List<String> serviceList = new ArrayList<String>();
     
     public String serializeObjectToString(Object object) throws IOException 
     {
@@ -155,7 +160,35 @@ public class RequestAgent extends Agent{
                         Logger.getLogger(RequestAgent.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     
-                    if(req.getRequest().equals("get all request")){                 
+                    if(msg.getPerformative() == ACLMessage.INFORM){
+                        if(req.getRequest().equals("buy product")){
+                            req.setRequest("insert request");
+                            String strObj = ""; 
+                            try
+                            {
+                                strObj = serializeObjectToString(req);
+                            }
+                            catch (Exception ex)
+                            {
+                                System.out.println("\n[RequestAgent] ObjToStr conversion error: " + ex.getMessage());
+                            }
+
+                            ACLMessage reply = new ACLMessage(ACLMessage.INFORM);
+
+                            
+                            Iterator it = msg.getAllReplyTo(); 
+                            reply.addReplyTo((AID)it.next());
+                            reply.addReceiver((AID)it.next()); //get from envelope    
+                            reply.setContent(strObj);                        
+                            send(reply);
+
+                            System.out.println("\n[RequestAgent] Sending Message!");
+                            System.out.println("[RequestAgent] Receiver Agent                 : " + msg.getSender());
+                            System.out.println("[RequestAgent] Message content [Base64 string]: " + msg.getContent());
+                        }
+                    }
+                    else {
+                        if(req.getRequest().equals("get all request")){                 
                         try {  
                             con=DriverManager.getConnection(  "jdbc:derby://localhost:1527/sample","app","app");
                             Statement stmt=con.createStatement(); 
@@ -206,6 +239,7 @@ public class RequestAgent extends Agent{
                         System.out.println("[RequestAgent] Message content [Base64 string]: " + msg.getContent());
                     }
                     else if(req.getRequest().equals("insert request")){
+                        getServiceAgent();
                         OrderList orders = req.getCusReq().getOrder();
                         int receiptId, orderId;
                         
@@ -269,6 +303,8 @@ public class RequestAgent extends Agent{
                             Logger.getLogger(CustomerAgent.class.getName()).log(Level.SEVERE, null, ex);
                         }
                         
+                        req.setRequest("buy product");
+                        
                         String strObj = ""; 
                         try
                         {
@@ -276,15 +312,17 @@ public class RequestAgent extends Agent{
                         }
                         catch (Exception ex)
                         {
-                            System.out.println("\n[RequestAgent] ObjToStr conversion error: " + ex.getMessage());
+                            System.out.println("\n[CustomerAgent] ObjToStr conversion error: " + ex.getMessage());
                         }
 
-                        ACLMessage reply = new ACLMessage(ACLMessage.INFORM);
+                        ACLMessage requestMsg = new ACLMessage(ACLMessage.REQUEST);
 
-                        reply.addReceiver(msg.getSender()); //get from envelope                       
-                        reply.addReplyTo((AID)msg.getAllReplyTo().next());
-                        reply.setContent(strObj);                        
-                        send(reply);
+                        requestMsg.addReceiver(AIDMap.get(req.getRequest()));
+                        requestMsg.setContent(strObj);
+                        requestMsg.addReplyTo((AID)msg.getAllReplyTo().next());
+                        requestMsg.addReplyTo(msg.getSender());
+
+                        send(requestMsg);
 
                         System.out.println("\n[RequestAgent] Sending Message!");
                         System.out.println("[RequestAgent] Receiver Agent                 : " + msg.getSender());
@@ -313,9 +351,60 @@ public class RequestAgent extends Agent{
                         System.out.println("[RequestAgent] Receiver Agent                 : " + msg.getSender());
                         System.out.println("[RequestAgent] Message content [Base64 string]: " + msg.getContent());                                  
                     }    
+                    }
+                    
                 }
                 block();
             }
         });
+    }
+    
+    public void getServiceAgent() {
+  	try {
+            String service = null;
+            String serviceType = "basic-inventory";
+            System.out.println("Searching the DF/Yellow-Pages for " + serviceType + " service");
+            AIDMap.clear();
+            serviceList.clear();
+            
+            // Build the description used as template for the search
+            DFAgentDescription template = new DFAgentDescription();
+            
+            ServiceDescription templateSd = new ServiceDescription();
+            templateSd.setType(serviceType);
+            template.addServices(templateSd);
+  		
+            SearchConstraints sc = new SearchConstraints();
+            // We want to receive 10 results at most
+            sc.setMaxResults(new Long(10));
+  		
+            DFAgentDescription[] results = DFService.search(this, template, sc);
+            if (results.length > 0) {
+  		System.out.println("Agent "+getLocalName()+" found the following " + serviceType + " services:");
+                
+  		for (int i = 0; i < results.length; ++i) {
+                    DFAgentDescription dfd = results[i];
+                    AID agentAID = dfd.getName();
+                    for(Iterator it = dfd.getAllServices(); it.hasNext();) {
+                        ServiceDescription serviceDesc = (ServiceDescription)it.next();
+                        
+                        for(Iterator it2 = serviceDesc.getAllProperties();it2.hasNext();) {
+                            Property p = (Property)(it2.next());
+                            service = p.getValue().toString();
+
+                            AIDMap.put(service, dfd.getName());
+
+                            serviceList.add(service);
+                        }
+                    }
+  		}
+            }	
+            else {
+                System.out.println("No Service Found");
+            }
+  	}
+  	catch (FIPAException fe) {
+            fe.printStackTrace();
+  	}
     }
 }
